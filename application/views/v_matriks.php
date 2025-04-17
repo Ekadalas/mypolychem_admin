@@ -5,12 +5,12 @@
 <head>
 	<?php $this->load->view('cover/header'); ?>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  
+
 </head>
 <body id="page-top">
 
  	<div id="wrapper">
-    
+
  		<?php $this->load->view('cover/sidebar') ?>
  		 <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
@@ -19,7 +19,7 @@
             <div id="content">
             	<?php $this->load->view('cover/topbar'); ?>
                 <div class="contente">
-               <div class="container-fluid">	
+               <div class="container-fluid">
 
                 <div class="col-xl-12 col-md-12 mb-5">
                 <div class="card border-left-info shadow py-3" style="min-height: auto;">
@@ -33,12 +33,12 @@
                           MATRIX APPROVAL
                         </div>
                       </div>
-                      
+
                       <div class="col-auto">
                         <img style="width: 100px; height: 60px;" src="<?php echo base_url('assets/img/matrix.svg')?>">
                       </div>
                       <!--  <div class="col-auto" style="position: relative; display: inline-block;">
-                        
+
                       <i class="far fa-file-alt fa-3x" style="color: #10375C;"></i>
                      <i class="fas fa-check-double" style="position: absolute; top: -15px; left: -10px; font-size: 1.55em; color: #74C0FC; transform: rotate(0deg);"></i>
                     </div> -->
@@ -50,18 +50,18 @@
                		 <div class="mb-2 align-items-center">
             <div class="card shadow mb-4">
               <div class="card-body">
-                  <div class="dropdown mb-4">
-                      <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name="departemen"> Pilih Departemen </button>
+									<div class="dropdown mb-4">
+									<button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name="departemen"> Pilih Departemen </button>
 
-                                        <div class="dropdown-menu animated--fade-in"
-                                            aria-labelledby="dropdownMenuButton">
-                                            <?php foreach ($departemen as $k) { ?>
-                        
-                                            <a class="dropdown-item" href="#" data-value = "<?php echo $k['departemen'] ?>" ><?php echo $k['departemen']; ?></a>
-                                           
-                                           <?php }?>
-                                        </div>
-                                    </div>
+									<div class="dropdown-menu animated--fade-in"
+									aria-labelledby="dropdownMenuButton">
+									<?php foreach ($departemen as $k) { ?>
+
+									<a class="dropdown-item" href="#" data-value = "<?php echo $k['departemen'] ?>" ><?php echo $k['departemen']; ?></a>
+
+									<?php }?>
+									</div>
+									</div>
                    <!--  <form method="POST" class="">
                     <label class="form-label">Pilih Departemen</label>
                     <select class="form-select">
@@ -90,13 +90,13 @@
                 <!-- <th>ORGANISASI ATASAN</th> -->
               </tr>
             </thead>
-          
+
           <?php if (!empty($data)): ?>
 
             <tbody style="font-size: 12px; color: black;">
                              <?php
-                              $no = 1; 
-                            
+                              $no = 1;
+
                               foreach ($data as $k) {
                                   $nip_btn    = $k['nik_dinilai'];
                                   $name       = $k['nama_dinilai'];
@@ -106,7 +106,7 @@
                                   $org        = $k['organisasi_ppk'];
                                   $nik_atasan = $k['nik_atasan'];
                                   $nama_atasan = $k['nama_atasan'];
-                               
+
                               ?>
                               <tr>
                                 <td><?php echo $no++  ?></td>
@@ -115,16 +115,16 @@
                                 <td><?php echo $departemen  ?></td>
                                 <td><?php echo $grade; ?></td>
                                 <td><?php echo $cd_office ?></td>
-                                <td><?php echo $org ?></td>                              
+                                <td><?php echo $org ?></td>
                                 <td><?php echo $nik_atasan ?></td>
                                 <td><?php echo $nama_atasan ?></td>
                                 <!-- <td></td> -->
-                              
+
                               </tr>
                               <?php } ?>
                               <?php elseif (isset($depart)): ?>
-                              <?php 
-                              $no = 1; 
+                              <?php
+                              $no = 1;
 
                               foreach ($depart as $k) {
                                   $nip_btn    = $k['nik_dinilai'];
@@ -135,7 +135,7 @@
                                   $org        = $k['organisasi_ppk'];
                                   $nik_atasan = $k['nik_atasan'];
                                   $nama_atasan = $k['nama_atasan'];
-                              
+
                               ?>
                                <tr>
                                 <td><?php echo $no++  ?></td>
@@ -144,11 +144,11 @@
                                 <td><?php echo $departemen  ?></td>
                                 <td><?php echo $grade; ?></td>
                                 <td><?php echo $cd_office ?></td>
-                                <td><?php echo $org ?></td>                              
+                                <td><?php echo $org ?></td>
                                 <td><?php echo $nik_atasan ?></td>
                                 <td><?php echo $nama_atasan ?></td>
                                 <!-- <td></td> -->
-                              
+
                               </tr>
                             <?php } ?>
                             <?php else: ?>
@@ -157,14 +157,14 @@
                               </tr>
                             <?php endif; ?>
                             </tbody>
-                         
+
                           </table>
         </div>
       </div>
     </div>
     </div>
   </div>
-</div> 
+</div>
 <script>
     $(document).ready(function(){
         var dataTable = $('#dataTable').DataTable(); // Inisialisasi awal DataTables
