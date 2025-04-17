@@ -2,16 +2,16 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 class C_absen extends CI_Controller
-{ 
-	
+{
+
 	public function __construct()
-	{ 
+	{
 		parent::__construct();
 		$this->load->helper('url');
 		$this->load->library('session','upload');
         $this->load->model('M_absen');
        // header('Content-Type: Application/json');
-		
+
 	}
 
 	public function index() {
@@ -34,7 +34,7 @@ class C_absen extends CI_Controller
         $cd_office = '001';
     } elseif ($kantor == 'KRW') {
         $cd_office = '003';
-    } 
+    }
 
     $departement = $this->M_absen->get_departemen($cd_office);
     echo json_encode($departement);
@@ -78,8 +78,8 @@ class C_absen extends CI_Controller
     $this->load->view('v_absen_harian', $data);
 }
 
-   
-    
+
+
 
    public function upload() {
     // Ambil data dari input post
@@ -97,7 +97,7 @@ class C_absen extends CI_Controller
     $work_loc  = $this->input->post('work_loc');
     $keterangan = $this->input->post('keterangan');
 
-    
+
 
     // Konfigurasi upload file
     $config['upload_path'] = './uploads/';
@@ -162,9 +162,9 @@ class C_absen extends CI_Controller
 
 
 
-       
-        
-    
 
-	
+
+
+
+
 }
