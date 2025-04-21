@@ -118,11 +118,11 @@
     <ul class="twitter-bs-wizard-nav nav nav-pills nav-justified" role="tablist">
         <?php foreach ($pertanyaan as $i => $item): ?>
             <li class="nav-item" role="presentation">
-                <a href="#step-<?= $i + 1 ?>" 
-                   class="nav-link <?= $i === 0 ? 'active' : '' ?>" 
-                   data-bs-toggle="pill" 
+                <a href="#step-<?= $i + 1 ?>"
+                   class="nav-link <?= $i === 0 ? 'active' : '' ?>"
+                   data-bs-toggle="pill"
                    role="tab"
-                   aria-controls="step-<?= $i + 1 ?>" 
+                   aria-controls="step-<?= $i + 1 ?>"
                    aria-selected="<?= $i === 0 ? 'true' : 'false' ?>">
                     <div class="step-icon" title="Step <?= $i + 1 ?>">
                         <h6 style="font-size: 18px; font-weight: bold; text-align: center;"><strong><?= $i + 1 ?></strong></h6>
@@ -135,8 +135,8 @@
     <!-- Isi Konten Tab -->
     <div class="tab-content twitter-bs-wizard-tab-content mt-4">
         <?php foreach ($pertanyaan as $i => $item): ?>
-            <div class="tab-pane fade <?= $i === 0 ? 'show active' : '' ?>" 
-                 id="step-<?= $i + 1 ?>" 
+            <div class="tab-pane fade <?= $i === 0 ? 'show active' : '' ?>"
+                 id="step-<?= $i + 1 ?>"
                  role="tabpanel">
                 <form>
                     <div class="row">
@@ -161,7 +161,7 @@
                     <!-- Tombol Edit -->
                     <!-- <div class="btn-toolbar flex-column mt-3" role="toolbar">
                       <button type="button" class="button5 btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#editPertanyaanModal" onclick="setEditData(<?= $i + 1 ?>)">
-                      <i class="fas fa-edit"></i> Edit Pertanyaan 
+                      <i class="fas fa-edit"></i> Edit Pertanyaan
                     </button>
                     </div> -->
 
@@ -214,13 +214,13 @@
     </div>
 </div>
 
-    <!-- Bootstrap JS -->    
+    <!-- Bootstrap JS -->
     <script>
         function setEditData(pertanyaanId) {
             // Ambil data pertanyaan berdasarkan ID
             const pertanyaan = <?php echo json_encode($pertanyaan); ?>;
             const selectedPertanyaan = pertanyaan[pertanyaanId - 1]; // Karena index dimulai dari 0
-            
+
             // Isi modal dengan data pertanyaan
             document.getElementById('editPertanyaan').value = selectedPertanyaan.pertanyaan;
             document.getElementById('editDeskripsiPertanyaan').value = selectedPertanyaan.descr_pertanyaan;
