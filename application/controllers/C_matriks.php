@@ -27,5 +27,19 @@ class C_matriks extends CI_Controller
 		$this->load->view('v_matriks',$data_matriks);
 	}
 
+	public function tambah() {
+
+	$nik_sesi = $this->session->userdata('nip_btn');
+
+		$hasil =  $this->db->select(['name','nip_btn'])
+				 ->from('data_karyawan')
+				 ->where('cd_office', $nik_sesi)
+				 ->order_by('name', 'ASC')
+				 ->get();
+		$data['nilai'] = $hasil->result_array(); 
 	
+
+	$this->load->view('v_new_penilaian', $data); 
+	
+	} 
 }
