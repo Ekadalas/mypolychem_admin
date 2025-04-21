@@ -51,7 +51,7 @@
             	<?php $this->load->view('cover/topbar'); ?>
                <div class="contente">
                <div class="container-fluid">
-
+    
                 <div class="col-xl-12 col-md-12 mb-5">
                 <div class="card border-left-info shadow py-3" style="min-height: auto;">
                   <div class="card-body">
@@ -61,7 +61,7 @@
                           Data Pendukung
                         </div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                          DATA MASTER KARYAWAN
+                          DATA MATRIX PPK
                         </div>
                       </div>
                       <div class="col-auto">
@@ -84,16 +84,24 @@
     border-width: 3px;
   }
 </style>
-
+<form>
+  <button type="submit" id="plusPlus" class="btn btn-info" formaction="<?= site_url('C_matrix_penilaian/tambah'); ?>"> Data Penilai Baru <i class="fas fa-plus"></i></button>  
+       <button type="submit" class="btn btn-warning" formaction="<?= site_url('C_matrix_penilaian/edit_penilai') ?>" id="klikEdit" disabled > Ubah Penilai <i class="far fa-edit "></i> </button>
+       <!-- <button type="button" class="btn btn-danger">Hapus </button> -->
+       <button type="submit" id="apusDelet" class="btn btn-danger" formaction="<?= site_url('C_matrix_penilaian/hapus') ?>" onclick = "return confirm('apakah anda yakin ingin menghapus data ini ?')">Hapus <i class="far fa-trash-alt"></i></button>
+      <br><br>
+        <code style="color: red">Mohon Pilih satu data yang penilainya ingin di ubah </code>
  <div class="row my-4">
   <div class="col-md-12">
     <div class="card shadow">
          <div class="card border-left-info shadow py-3" style="min-height: auto;">
       <div class="card-body">
+
         <div class="table-responsive">
            <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
             <thead class="thead-light"  style="font-size: 12px;">
               <tr>
+                <th></th>
                 <th>NO</th>
                 <th>PERIODE</th>
                 <th>NIK</th>
@@ -120,6 +128,10 @@
 																	$p3           = $k['nama_p3'];
                               ?>
                               <tr style="font-size:11px">
+                                <td><input type="checkbox" name="input_nik" value="<?php echo $nik_dinilai; ?>">
+                                    <input type="hidden" name="p1" value="<?php echo $p1; ?>">
+                                    <input type="hidden" name="p2" value="<?php echo $p2; ?>">
+                                    <input type="hidden" name="p3" value="<?php echo $p3; ?>"></td>
                                 <td><?php echo $no++  ?></td>
                                 <td><?php echo $periode ?></td>
                                 <td><?php echo $nik_dinilai  ?></td>
@@ -134,6 +146,7 @@
                             </tbody>
 
                           </table>
+                        </form>
         </div>
       </div>
     </div>
@@ -141,11 +154,83 @@
   </div>
 </div>
 
-
-
               </div> <!-- .card-body -->
             </div> <!-- .card -->
           </div>
+          <script>
+  $(document).ready(function () {
+      
+    $('#klikEdit, #apusDelet').prop('disabled', true);
+
+    $('input[name="input_nik"]').on('change', function() {
+        var anychecked = $('input[name="input_nik"]:checked').length > 0;
+        $('#klikEdit, #apusDelet').prop('disabled', !anychecked);
+    });
+
+    var table = $('#dataTable').DataTable();
+    $('#klikEdit').on('click', function(e) {
+      
+      var selectedValue = $('input[name="input_nik"]:checked', table.rows().nodes())
+        .map(function() { return this.value; }).get();
+
+        if (selectedValue.length > 0 ) {
+            var actionUrl = "<?= site_url('C_matrix_penilaian/edit_penilai') ?>?input_nik=" + selectedValue;
+            $(this).attr('formaction', actionUrl);
+        } else {
+            e.preventDefault(); // Mencegah submit jika tidak ada yang dipilih
+            alert('Pilih salah satu NIK terlebih dahulu!');
+        }
+
+           // Optional: Aktifkan tombol jika salah satu dipilih
+        $('#dataTable').on('change', 'input[name="input_nik"]', function() {
+        $('#klikEdit').prop('disabled', !$('input[name="input_nik"]:checked', table.rows().nodes()).length);
+          });
+          
+    });
+
+
+    var selectedNIKs = [];
+
+  // Ketika checkbox dicentang atau tidak
+  $(document).on('change', 'input[name="input_nik"]', function() {
+    var val = $(this).val();
+
+    if ($(this).is(':checked')) {
+      if (!selectedNIKs.includes(val)) {
+        selectedNIKs.push(val);
+      }
+    } else {
+      selectedNIKs = selectedNIKs.filter(function(nik) {
+        return nik !== val;
+      });
+    }
+  });
+
+  // Saat klik tombol hapus
+  $('#apusDelet').on('click', function(e) {
+    if (selectedNIKs.length > 0) {
+      var combinedValues = selectedNIKs.join(',');
+      var actionUrl = "<?= site_url('C_matrix_penilaian/hapus') ?>?input_nik=" + combinedValues;
+      $(this).attr('formaction', actionUrl);
+    } else {
+      e.preventDefault();
+      alert('Mohon bijak dalam melakukan sesuatu');
+    }
+  });
+
+  // Optional: saat draw ulang datatable (misal pindah halaman), centang checkbox yg sudah terpilih
+  $('#dataTable').on('draw.dt', function() {
+    $('input[name="input_nik"]').each(function() {
+      if (selectedNIKs.includes($(this).val())) {
+        $(this).prop('checked', true);
+      }
+    });
+  });
+
+
+});
+
+</script>
                </div>
              </div>
            </div>

@@ -38,6 +38,7 @@
     <!-- Custom styles for this template-->
     <link href="<?php echo base_url('assets/css/sb-admin-2.min.css') ?>" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.min.css">
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/button.css'); ?>">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.min.js"></script>
     <style>
         .bg-custom-dark {
