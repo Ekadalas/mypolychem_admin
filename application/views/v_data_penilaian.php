@@ -36,7 +36,7 @@
                           Data Harian
                         </div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                          DATA PENILAIAN
+                          DATA PENILAIAN PPK
                         </div>
                       </div>
                       <div class="col-auto">
