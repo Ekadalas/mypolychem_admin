@@ -90,6 +90,7 @@
        <!-- <button type="button" class="btn btn-danger">Hapus </button> -->
        <button type="submit" id="apusDelet" class="btn btn-danger" formaction="<?= site_url('C_matrix_penilaian/hapus') ?>" onclick = "return confirm('apakah anda yakin ingin menghapus data ini ?')">Hapus <i class="far fa-trash-alt"></i></button>
       <br><br>
+      
         <code style="color: red">Mohon Pilih satu data yang penilainya ingin di ubah </code>
  <div class="row my-4">
   <div class="col-md-12">
