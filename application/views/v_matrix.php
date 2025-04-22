@@ -51,7 +51,7 @@
             	<?php $this->load->view('cover/topbar'); ?>
                <div class="contente">
                <div class="container-fluid">
-    
+
                 <div class="col-xl-12 col-md-12 mb-5">
                 <div class="card border-left-info shadow py-3" style="min-height: auto;">
                   <div class="card-body">
@@ -85,9 +85,9 @@
   }
 </style>
 <form>
-  <button type="submit" id="plusPlus" class="btn btn-info" formaction="<?= site_url('C_matrix_penilaian/tambah'); ?>"> Data Penilai Baru <i class="fas fa-plus"></i></button>  
-       <button type="submit" class="btn btn-warning" formaction="<?= site_url('C_matrix_penilaian/edit_penilai') ?>" id="klikEdit" disabled > Ubah Penilai <i class="far fa-edit "></i> </button>
-       <!-- <button type="button" class="btn btn-danger">Hapus </button> -->
+  <button type="submit" id="plusPlus" class="btn btn-info" formaction="<?= site_url('C_matrix_penilaian/tambah'); ?>"> Data Penilai Baru <i class="fas fa-plus"></i></button>
+	<button type="button" class="btn btn-warning" onclick="submitNIK()">Ubah <i class="far fa-edit"></i></button>
+
        <button type="submit" id="apusDelet" class="btn btn-danger" formaction="<?= site_url('C_matrix_penilaian/hapus') ?>" onclick = "return confirm('apakah anda yakin ingin menghapus data ini ?')">Hapus <i class="far fa-trash-alt"></i></button>
       <br><br>
       
@@ -129,10 +129,7 @@
 																	$p3           = $k['nama_p3'];
                               ?>
                               <tr style="font-size:11px">
-                                <td><input type="checkbox" name="input_nik" value="<?php echo $nik_dinilai; ?>">
-                                    <input type="hidden" name="p1" value="<?php echo $p1; ?>">
-                                    <input type="hidden" name="p2" value="<?php echo $p2; ?>">
-                                    <input type="hidden" name="p3" value="<?php echo $p3; ?>"></td>
+                                <td><input type="checkbox" class="input_nik" value="<?= $k['nik_dinilai']; ?>"></td>
                                 <td><?php echo $no++  ?></td>
                                 <td><?php echo $periode ?></td>
                                 <td><?php echo $nik_dinilai  ?></td>
@@ -158,80 +155,58 @@
               </div> <!-- .card-body -->
             </div> <!-- .card -->
           </div>
-          <script>
-  $(document).ready(function () {
-      
-    $('#klikEdit, #apusDelet').prop('disabled', true);
-
-    $('input[name="input_nik"]').on('change', function() {
-        var anychecked = $('input[name="input_nik"]:checked').length > 0;
-        $('#klikEdit, #apusDelet').prop('disabled', !anychecked);
-    });
-
-    var table = $('#dataTable').DataTable();
-    $('#klikEdit').on('click', function(e) {
-      
-      var selectedValue = $('input[name="input_nik"]:checked', table.rows().nodes())
-        .map(function() { return this.value; }).get();
-
-        if (selectedValue.length > 0 ) {
-            var actionUrl = "<?= site_url('C_matrix_penilaian/edit_penilai') ?>?input_nik=" + selectedValue;
-            $(this).attr('formaction', actionUrl);
-        } else {
-            e.preventDefault(); // Mencegah submit jika tidak ada yang dipilih
-            alert('Pilih salah satu NIK terlebih dahulu!');
-        }
-
-           // Optional: Aktifkan tombol jika salah satu dipilih
-        $('#dataTable').on('change', 'input[name="input_nik"]', function() {
-        $('#klikEdit').prop('disabled', !$('input[name="input_nik"]:checked', table.rows().nodes()).length);
-          });
-          
-    });
 
 
-    var selectedNIKs = [];
+					<script>
+			    // Fungsi untuk mengaktifkan/menonaktifkan semua checkbox
+			    function toggleCheckboxes() {
+			    var checkboxes = document.getElementsByName('nik_id[]');
+			    var checkAllCheckbox = document.getElementById('checkAll');
 
-  // Ketika checkbox dicentang atau tidak
-  $(document).on('change', 'input[name="input_nik"]', function() {
-    var val = $(this).val();
+			    for (var i = 0; i < checkboxes.length; i++) {
+			    checkboxes[i].checked = checkAllCheckbox.checked;
+			    }
+			    }
+			    </script>
 
-    if ($(this).is(':checked')) {
-      if (!selectedNIKs.includes(val)) {
-        selectedNIKs.push(val);
-      }
-    } else {
-      selectedNIKs = selectedNIKs.filter(function(nik) {
-        return nik !== val;
-      });
-    }
-  });
+			    <!-- Membuat button menjadi disabled ketika checkbox belum dipilih -->
+			  <script>
+			  $(document).ready(function() {
+			  $('#submit').prop('disabled', true); // set button to disabled by default
+			  $('input[type="checkbox"]').on('change', function() {
+			  var anyChecked = $('input[type="checkbox"]:checked').length > 0; // check if any checkbox is checked
+			  $('#submit').prop('disabled', !anyChecked); // enable/disable button based on whether a checkbox is checked
+			  });
+			  });
+			  </script>
 
-  // Saat klik tombol hapus
-  $('#apusDelet').on('click', function(e) {
-    if (selectedNIKs.length > 0) {
-      var combinedValues = selectedNIKs.join(',');
-      var actionUrl = "<?= site_url('C_matrix_penilaian/hapus') ?>?input_nik=" + combinedValues;
-      $(this).attr('formaction', actionUrl);
-    } else {
-      e.preventDefault();
-      alert('Mohon bijak dalam melakukan sesuatu');
-    }
-  });
+				<script>
+				function submitNIK() {
+				let selected = [];
+				$('.input_nik:checked').each(function() {
+				selected.push($(this).val());
+				});
 
-  // Optional: saat draw ulang datatable (misal pindah halaman), centang checkbox yg sudah terpilih
-  $('#dataTable').on('draw.dt', function() {
-    $('input[name="input_nik"]').each(function() {
-      if (selectedNIKs.includes($(this).val())) {
-        $(this).prop('checked', true);
-      }
-    });
-  });
+				if (selected.length === 0) {
+				alert("Silakan pilih minimal 1 NIK.");
+				return;
+				}
+
+				$.ajax({
+				url: 'C_matrix_penilaian/alertNIK', // Ganti dengan controller kamu
+				type: 'POST',
+				data: {input_nik: selected},
+				success: function(response) {
+				alert(response); // Controller akan kirim alert berupa string
+				},
+				error: function() {
+				alert("Terjadi kesalahan.");
+				}
+				});
+				}
+				</script>
 
 
-});
-
-</script>
                </div>
              </div>
            </div>
