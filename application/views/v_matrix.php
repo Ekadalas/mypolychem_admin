@@ -4,6 +4,7 @@
 <html>
 <head>
 	<?php $this->load->view('cover/header'); ?>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
 	<style>
 	    .btn-xs {
 	        font-size: 13px; /* Ukuran teks lebih kecil */
@@ -65,7 +66,7 @@
                         </div>
                       </div>
                       <div class="col-auto">
-                        <img style="width: 100px; height: 60px;" src="<?php echo base_url('assets/img/cuti.svg')?>">
+                        <img style="width: 100px; height: 60px;" src="<?php echo base_url('assets/img/matrix_1.svg')?>">
                         <!-- <i class="fas fa-calendar-check fa-3x " style="color: #74C0FC;"></i> -->
                       </div>
                     </div>
@@ -88,7 +89,7 @@
   <button type="submit" id="plusPlus" class="btn btn-info" formaction="<?= site_url('C_matrix_penilaian/tambah'); ?>"> Data Penilai Baru <i class="fas fa-plus"></i></button>
 	<button type="button" class="btn btn-warning" onclick="submitNIK()">Ubah <i class="far fa-edit"></i></button>
 
-       <button type="submit" id="apusDelet" class="btn btn-danger" formaction="<?= site_url('C_matrix_penilaian/hapus') ?>" onclick = "return confirm('apakah anda yakin ingin menghapus data ini ?')">Hapus <i class="far fa-trash-alt"></i></button>
+       <button type="submit" id="apusDelet" class="btn btn-danger" onclick="wadahNik()" formaction="<?= site_url('C_matrix_penilaian/hapus') ?>">Hapus <i class="far fa-trash-alt"></i></button>
       <br><br>
         <code style="color: red">Mohon Pilih satu data yang penilainya ingin di ubah </code>
  <div class="row my-4">
@@ -118,6 +119,7 @@
                              <?php
                               $no = 1;
                               foreach ($matrix as $k) {
+                                  $id_ppk       = $k['id'];
                                   $periode      = $k['periode_ppk'];
                                   $nik_dinilai  = $k['nik_dinilai'];
                                   $nama_dinilai = $k['nama_dinilai'];
@@ -128,7 +130,7 @@
 																	$p3           = $k['nama_p3'];
                               ?>
                               <tr style="font-size:11px">
-                                <td><input type="checkbox" class="input_nik" value="<?= $k['nik_dinilai']; ?>"></td>
+                                <td><input type="checkbox" class="data-checkbox" name="input_id[]" value="<?= $k['id']; ?>"></td>
                                 <td><?php echo $no++  ?></td>
                                 <td><?php echo $periode ?></td>
                                 <td><?php echo $nik_dinilai  ?></td>
@@ -187,7 +189,12 @@
 				});
 
 				if (selected.length === 0) {
-				alert("Silakan pilih minimal 1 NIK.");
+				// alert("Silakan pilih minimal 1 NIK.");
+        Swal.fire({
+          title : "Info!", 
+          text  : "Silakan pilih minimal 1 NIK", 
+          icon  : "info", 
+        });
 				return;
 				}
 
@@ -204,6 +211,63 @@
 				});
 				}
 				</script>
+       <script>
+  $(document).ready(function() {
+    $('#apusDelet').on('click', function(e) {
+      e.preventDefault(); // cegah submit form default
+
+      // Ambil data checkbox yang dicentang
+      let selected = [];
+      $('input[type="checkbox"]:checked').each(function() {
+        selected.push($(this).val());
+      });
+
+      if (selected.length === 0) {
+        Swal.fire({
+          title: "Checkdata..",
+          text: "Kamu belum memilih NIK mana yang ingin dihapus",
+          icon: "warning"
+        });
+      } else {
+        Swal.fire({
+          title: "Hati-hati",
+          text: "Apakah kamu yakin ingin menghapus data ini?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "Ya, Hapus",
+          cancelButtonText: "Batal"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $.ajax({
+              url: "<?= site_url('C_matrix_penilaian/hapus') ?>",
+              type: "POST",
+              data: { input_id: selected },
+              dataType: "json",
+              success: function(response) {
+                Swal.fire('Berhasil!', 'Data telah dihapus.', 'success')
+                  .then(() => {
+                    console.log(result);
+                    location.reload();
+                  });
+              },
+              error: function() {
+                Swal.fire('Gagal!', 'Terjadi kesalahan saat menghapus data.', 'error');
+              }
+            });
+          }
+        });
+      }
+    });
+  });
+</script>
+<script >
+  function wadahNik() {
+    $('#dataTable').DataTable().search('').draw(); 
+    $('#dataTable').DataTable().page.len(-1).draw();
+  }
+</script>
 
 
                </div>
