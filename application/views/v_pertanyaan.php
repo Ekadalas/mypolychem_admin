@@ -38,14 +38,14 @@
                             timer: 3000, // Menunggu 10 detik (10000 ms)
                             timerProgressBar: true, // Menampilkan progres waktu
                             willClose: () => {
-                                
+
                             }
                         });
                     </script>
                 <?php endif; ?>
 
 
-	
+
 
   <?php $nip = $this->session->userdata('nip_btn'); ?>
  	<div id="wrapper">
@@ -138,10 +138,10 @@
 </form>
 
 
-           
-<p class="col-lg-4 text-center fw-bold">
+
+<!-- <p class="col-lg-4 text-center fw-bold">
     Grade dan Pertanyaan yang dipilih: <span id="selected-grade">Belum ada</span>
-</p>
+</p> -->
 
 <!-- <div id="susunomor">
     <div id="basic-pills-wizard" class="twitter-bs-wizard">
@@ -230,21 +230,21 @@
            </div>
         </div>
  	</div>
-  
+
 <script>
-   
+
    document.getElementById("formPertanyaan").addEventListener("submit", function(event) {
 
-       document.getElementById("susunomor").style.display = "none"; 
+       document.getElementById("susunomor").style.display = "none";
    });
 
    function submitTanya() {
 
-       document.getElementById("susunomor").style.display = "none"; 
+       document.getElementById("susunomor").style.display = "none";
 
        // alert('Berikut nomor Soalnya');
 
-       document.getElementById("formPertanyaan").submit(); 
+       document.getElementById("formPertanyaan").submit();
    }
 
    function nextTab(currentIndex) {
@@ -256,9 +256,9 @@
        // if (!soalInput.value || !jawabanInput.value || !gradeSelect.value) {
        //     alert('Harap isi semua field sebelum melanjutkan!');
        //     return;
-       // } 
+       // }
        // AKHIR VALIDASI FORM
-       
+
        const tabs = document.querySelectorAll('.twitter-bs-wizard-nav .nav-link');
        if (currentIndex < tabs.length - 1) {
            tabs[currentIndex + 1].click();
@@ -275,7 +275,7 @@
        // Tambahkan logika pengiriman formulir sesuai kebutuhan
    }
 
-  
+
 
 </script>
 </body>
