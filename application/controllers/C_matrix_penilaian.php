@@ -23,7 +23,7 @@ class C_matrix_penilaian extends CI_Controller
 	$nik_sesi = $this->session->userdata('nip_btn');
 
 	if ($nik_sesi == '00') {
-		$as_nik = '000';
+		$as_nik = 'HO';
 	} elseif ($nik_sesi == '01') {
 		$as_nik = '001';
 	} elseif ($nik_sesi == '02') {
@@ -34,10 +34,10 @@ class C_matrix_penilaian extends CI_Controller
 		$as_nik = 'UNKNOW';
 	}
 
-		$hasil =  $this->db->select(['name','nip_btn'])
-				 ->from('data_karyawan')
-				 ->where('cd_office', $as_nik)
-				 ->order_by('name', 'ASC')
+		$hasil =  $this->db->select(['nama_dinilai','nik_dinilai'])
+				 ->from('data_matrix_ppk')
+				 ->where('office', $as_nik)
+				 ->order_by('nama_dinilai', 'ASC')
 				 ->get();
 		$data['nilai'] = $hasil->result_array();
 
@@ -51,8 +51,8 @@ class C_matrix_penilaian extends CI_Controller
 
 
 		$res = $this->db->select(['departemen'])
-					    ->from('data_karyawan')
-					    ->where('nip_btn', $nik)
+					    ->from('data_matrix_ppk')
+					    ->where('nik_dinilai', $nik)
 					    ->get();
 	    $data['departemen'] = $res->result_array();
 
@@ -243,32 +243,17 @@ foreach ($niks as $index => $nik) {
 
 }
 	public function hapus() {
-		$aadc = $this->input->get('input_nik[]');
-		$ap1  = $this->input->get('p1');
-		$ap2  = $this->input->get('p2');
-		$ap3  = $this->input->get('p3');
+		$id_apus = $this->input->post('input_id');
 
-		// $nikArray = explode(',', $aadc);
+		if (!empty($id_apus)) {
+		$this->db->where_in('id', $id_apus);
+		$this->db->delete('data_matrix_ppk');
 
-		$dataNik = [
-			'nik_dinilai' => $aadc,
-			'nik_p1' => $ap1,
-			'nik_p2' => $ap2,
-			'nik_p3' => $ap3
- 		];
+		echo json_encode(['status' => 'sukses']);	
+		} else {
 
-		echo '<pre>';
-		var_dump($nikArray);
-		echo '</pre>';
-
-		// Menghapus data berdasarkan array NIK
-		// $this->db->where_in('nik_dinilai', $nikArray);
-		// $this->db->delete('data_matrix_ppk');
-
-		// $this->session->set_flashdata('hapus_berhasil', 'Data berhasil dihapus.');
-
-
-		// redirect('C_matrix_penilaian');
+		echo json_encode(['status' => 'error', 'message' => 'Data tidak terhapus']);
+		}
 	}
 
 	public function edit_penilai() {
