@@ -38,22 +38,36 @@ class M_matrix extends CI_Model
     return $sql->result_array(); 
   }
 
+  // public function penilai($nik) {
+
+  //   // Jika $nik adalah array, ubah jadi format string untuk IN (...)
+  //   if (is_array($nik)) {
+  //     $nik_string = "'" . implode("','", $nik) . "'"; // hasil: '1234','5678','9012'
+  //   } else {
+  //     $nik_string = "'$nik'"; // fallback kalau bukan array
+  //   }
+
+  //   $query = $this->db->query("SELECT id, nik_dinilai, nama_dinilai, nik_p1, nama_p1, nik_p2, nama_p2, nik_p3, nama_p3 FROM data_matrix_ppk WHERE nik_dinilai IN ($nik_string)"); 
+  //   return $query->result_array(); 
+  // }
+
   public function penilai($nik) {
 
-    // Jika $nik adalah array, ubah jadi format string untuk IN (...)
-    if (is_array($nik)) {
-      $nik_string = "'" . implode("','", $nik) . "'"; // hasil: '1234','5678','9012'
-    } else {
-      $nik_string = "'$nik'"; // fallback kalau bukan array
-    }
+		// Jika $nik adalah array, ubah jadi format string untuk IN (...)
+		if (is_array($nik)) {
+			$nik_string = "'" . implode("','", $nik) . "'"; // hasil: '1234','5678','9012'
+		} else {
+			$nik_string = "'$nik'"; // fallback kalau bukan array
+		}
 
-    $query = $this->db->query("SELECT id, nik_dinilai, nama_dinilai, nik_p1, nama_p1, nik_p2, nama_p2, nik_p3, nama_p3 FROM data_matrix_ppk WHERE nik_dinilai IN ($nik_string)"); 
-    return $query->result_array(); 
-  }
+		$query = $this->db->query("SELECT id, nik_dinilai, nama_dinilai, nik_p1, nama_p1, nik_p2, nama_p2, nik_p3, nama_p3 FROM data_matrix_ppk WHERE nik_dinilai IN ($nik_string)"); 
+		return $query->result_array(); 
+	}
+
 
   public function data_all() {
-    $office = $this->session->userdata('nip_btn');
-    $query = $this->db->query("SELECT name, nip_btn FROM data_karyawan WHERE cd_office = '$office'  ORDER BY name ASC  ");
+    // $office = $this->session->userdata('nip_btn');
+    $query = $this->db->query("SELECT name, nip_btn FROM data_karyawan WHERE cd_office = '000'  ORDER BY name ASC  ");
     return $query->result_array();
   }
 
@@ -102,7 +116,7 @@ class M_matrix extends CI_Model
   }
 
   // 
-  
+
   public function update_multiple_matriks($data) {
     
     foreach ($data as $row) {
