@@ -25,22 +25,30 @@ public function tambah() {
 	if ($nik_sesi == '00') {
 		$as_nik = 'HO';
 	} elseif ($nik_sesi == '01') {
-		$as_nik = '001';
+		$as_nik = 'MRK';
 	} elseif ($nik_sesi == '02') {
-		$as_nik = '002';
+		$as_nik = 'TGR';
 	} elseif ($nik_sesi == '03') {
-		$as_nik = '003';
+		$as_nik = 'KRW';
 	} else {
 		$as_nik = 'UNKNOW';
 	}
 
-		$hasil =  $this->db->select(['nama_dinilai','nik_dinilai'])
-				 ->from('data_matrix_ppk')
-				 ->where('office', $as_nik)
-				 ->order_by('nama_dinilai', 'ASC')
-				 ->get();
-		$data['nilai'] = $hasil->result_array();
-
+		// $hasil =  $this->db->select(['name','nip_btn'])
+		// 		 ->from('data_karyawan')
+		// 		 ->where('cd_office', $as_nik)
+		// 		 ->order_by('name', 'ASC')
+		// 		 ->get();
+		// $data['nilai'] = $hasil->result_array();
+	$sql = "SELECT a.nik_dinilai, a.nama_dinilai, b.nik_dinilai 
+			FROM data_matrix_approve_cuti a LEFT JOIN data_matrix_ppk b 
+			ON a.nik_dinilai = b.nik_dinilai LEFT JOIN data_karyawan c 
+			ON a.nik_dinilai = c.nip_btn WHERE a.office = ? 
+			AND c.level = 'user' 
+			GROUP BY a.nik_dinilai 
+			ORDER BY a.nama_dinilai;";
+	$query = $this->db->query($sql, array($as_nik));
+    $data['nilai'] = $query->result_array();
 
 	$this->load->view('v_new_penilaian', $data);
 
@@ -50,13 +58,13 @@ public function tambah() {
 
 		$nik = $this->input->post('nik_dinilai');
 
-
-		$res = $this->db->select(['departemen'])
-					    ->from('data_matrix_ppk')
-					    ->where('nik_dinilai', $nik)
-					    ->get();
-	    $data['departemen'] = $res->result_array();
-
+	    $res = "SELECT a.departemen, a.nik_dinilai
+	    		FROM data_matrix_approve_cuti a 
+	    		LEFT JOIN data_matrix_ppk b 
+	    		ON a.nik_dinilai = b.nik_dinilai
+	    		WHERE a.nik_dinilai = ?"; 
+	    $get_res = $this->db->query($res, array($nik)); 
+	    $data['departemen'] = $get_res->result_array(); 	    		
 	    echo json_encode($data);
 	}
 
@@ -138,7 +146,7 @@ public function tambah() {
       				 ->where('nik_dinilai', $data['nik_p2'])
       				 ->get();
       $dataset = $hd->row_array();
-      $kode_p2 = !empty($query) ? $dataset['kode_organisasi'] : null;
+      $kode_p2 = !empty($dataset) ? $dataset['kode_organisasi'] : null;
 
       $hx = $this->db->select('kode_organisasi')
       				 ->from('data_matrix_ppk')

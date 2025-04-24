@@ -214,7 +214,7 @@
             if (data.departemen.length > 0) {
               var departemen = data.departemen[0].departemen;
               $('#getdeep_1').text(departemen); 
-
+              console.log('departemen :' ,departemen); 
               // Panggil AJAX kedua untuk mendapatkan daftar karyawan
               $.ajax({
                 url: '<?= site_url("C_matrix_penilaian/dptKaryawan"); ?>',
@@ -552,7 +552,12 @@ console.log(setId);
       }
     },
     error: function () {
-      alert('Terjadi kesalahan saat menyimpan data.');
+      // alert('Terjadi kesalahan saat menyimpan data.');
+       Swal.fire({
+        title : "Gagal!", 
+        text  : "Maaf terjadi kesalahan saat menyimpan data", 
+        icon  : "error"
+      }); 
     }
   });
 }
