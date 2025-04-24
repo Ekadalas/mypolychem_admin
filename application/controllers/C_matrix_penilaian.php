@@ -18,7 +18,7 @@ class C_matrix_penilaian extends CI_Controller
 		$this->load->view('v_matrix', $data);
 	}
 
-	public function tambah() {
+public function tambah() {
 
 	$nik_sesi = $this->session->userdata('nip_btn');
 
@@ -44,7 +44,8 @@ class C_matrix_penilaian extends CI_Controller
 
 	$this->load->view('v_new_penilaian', $data);
 
-	}
+}
+
 	public function getDepartemen() {
 
 		$nik = $this->input->post('nik_dinilai');
@@ -176,6 +177,7 @@ class C_matrix_penilaian extends CI_Controller
 
 
 
+
 public function update_multiple() {
 
 $p1s = $this->input->post('penilai1');
@@ -183,8 +185,10 @@ $p2s = $this->input->post('penilai2');
 $p3s = $this->input->post('penilai3');
 $niks = $this->input->post('dinilai1');
 
+
 // 1. Gabungkan semua NIK dari p1, p2, p3 dan hapus duplikat
 $all_penilai_niks = array_unique(array_merge($p1s, $p2s, $p3s));
+
 
 // 2. Ambil kode_organisasi dan nama_dinilai dari DB
 $this->db->select('nik_dinilai, kode_organisasi, nama_dinilai');
@@ -233,7 +237,7 @@ foreach ($niks as $index => $nik) {
 		// var_dump($data);
 		// echo '</pre>';
 
-	$result = $this->M_matriks->update_multiple_matriks($data);
+	$result = $this->M_matrix->update_multiple_matriks($data);
 
 	$this->session->set_flashdata('success', 'Data berhasil diperbarui!');
 
@@ -242,6 +246,7 @@ foreach ($niks as $index => $nik) {
 
 
 }
+
 	public function hapus() {
 		$id_apus = $this->input->post('input_id');
 
@@ -258,38 +263,46 @@ foreach ($niks as $index => $nik) {
 
 	public function edit_penilai() {
 
-		$nik_string = $this->input->get('input_nik'); // "1234,5678,91011"
-		$nik = explode(',', $nik_string); // jadi array: ['1234', '5678', '91011']
-		$this->session->set_userdata('input_nik', $nik);
+		// $nik_string = $this->input->get('input_id'); // "1234,5678,91011"
+		// $nik = explode(',', $nik_string); // jadi array: ['1234', '5678', '91011']
+		
+		// var_dump($nik);
+		$nik = $this->input->get('input_id'); // Sudah array
 
 
+		$this->session->set_userdata('input_id', $nik);
+		
 		$office = $this->session->userdata('nip_btn');
-		if ($office == '00') {
-			$ktr = 'HO';
-		} elseif ($office == '01') {
-			$ktr = 'MRK';
-		} elseif ($office == '02') {
-			$ktr = 'TGR';
-		} elseif ($office == '03') {
+		if ($office == '000') {
+			$ktr = 'HO'; 
+		} elseif ($office == '001') {
+			$ktr = 'MRK'; 
+		} elseif ($office == '002') {
+			$ktr = 'TGR'; 
+		} elseif ($office == '003') {
 			$ktr = 'KRW';
 		} else {
-			$ktr = 'UNKNOW';
+			$ktr = 'UNKNOW'; 
 		}
 
-		$data['knx'] = $this->M_matrix->penilai($nik);
-		$data['mmx'] = $this->M_matrix->data_matriks($ktr);
-		$data['kmn'] = $this->M_matrix->data_all();
+		$data['get_data_penilai'] = $this->M_matrix->penilai($nik);
+		$data['get_data_matriks'] = $this->M_matrix->data_matriks($ktr);
+		$data['get_data_karyawan'] = $this->M_matrix->data_all(); 
+		
 
-		var_dump($data);
-		//$this->load->view('v_edit_penilai', $data);
+		
+		$this->load->view('v_edit_penilai', $data);
+		
+
 	}
+	
 
 
 	public function alertNIK() {
         $input_nik = $this->input->post('input_nik'); // array dari checkbox
 
         if (!empty($input_nik)) {
-            $nik_list = implode(', ', $input_nik);
+            $nik_list = explode(', ', $input_nik);
             echo "NIK yang dipilih: " . $nik_list;
         } else {
             echo "Tidak ada NIK yang dipilih.";
