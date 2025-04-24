@@ -18,46 +18,50 @@ class C_matrix_penilaian extends CI_Controller
 		$this->load->view('v_matrix', $data);
 	}
 
-	public function tambah() {
+ public function tambah() {
 
-	$nik_sesi = $this->session->userdata('nip_btn');
+  $nik_sesi = $this->session->userdata('nip_btn');
 
-	if ($nik_sesi == '00') {
-		$as_nik = 'HO';
-	} elseif ($nik_sesi == '01') {
-		$as_nik = '001';
-	} elseif ($nik_sesi == '02') {
-		$as_nik = '002';
-	} elseif ($nik_sesi == '03') {
-		$as_nik = '003';
-	} else {
-		$as_nik = 'UNKNOW';
-	}
+  if ($nik_sesi == '00') {
+    $as_nik = 'HO';
+  } elseif ($nik_sesi == '01') {
+    $as_nik = 'MRK';
+  } elseif ($nik_sesi == '02') {
+    $as_nik = 'TGR';
+  } elseif ($nik_sesi == '03') {
+    $as_nik = 'KRW';
+  } else {
+    $as_nik = 'UNKNOW';
+  }
 
-		$hasil =  $this->db->select(['nama_dinilai','nik_dinilai'])
-				 ->from('data_matrix_ppk')
-				 ->where('office', $as_nik)
-				 ->order_by('nama_dinilai', 'ASC')
-				 ->get();
-		$data['nilai'] = $hasil->result_array();
+  $sql = "SELECT a.nik_dinilai, a.nama_dinilai, b.nik_dinilai 
+      FROM data_matrix_approve_cuti a LEFT JOIN data_matrix_ppk b 
+      ON a.nik_dinilai = b.nik_dinilai LEFT JOIN data_karyawan c 
+      ON a.nik_dinilai = c.nip_btn WHERE a.office = ? 
+      AND c.level = 'user' 
+      GROUP BY a.nik_dinilai 
+      ORDER BY a.nama_dinilai;";
+  $query = $this->db->query($sql, array($as_nik));
+    $data['nilai'] = $query->result_array();
 
+  $this->load->view('v_new_penilaian', $data);
 
-	$this->load->view('v_new_penilaian', $data);
+}
 
-	}
-	public function getDepartemen() {
+  public function getDepartemen() {
 
-		$nik = $this->input->post('nik_dinilai');
+    $nik = $this->input->post('nik_dinilai');
 
+      $res = "SELECT a.departemen, a.nik_dinilai
+          FROM data_matrix_approve_cuti a 
+          JOIN data_matrix_ppk b 
+          ON a.nik_dinilai = b.nik_dinilai
+          WHERE a.nik_dinilai = ?"; 
+      $get_res = $this->db->query($res, array($nik)); 
+      $data['departemen'] = $get_res->result_array();           
+      echo json_encode($data);
+  }
 
-		$res = $this->db->select(['departemen'])
-					    ->from('data_matrix_ppk')
-					    ->where('nik_dinilai', $nik)
-					    ->get();
-	    $data['departemen'] = $res->result_array();
-
-	    echo json_encode($data);
-	}
 
 	public function dptKaryawan() {
 
