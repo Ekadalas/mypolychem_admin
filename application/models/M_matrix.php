@@ -60,14 +60,24 @@ class M_matrix extends CI_Model
 			$nik_string = "'$nik'"; // fallback kalau bukan array
 		}
 
-		$query = $this->db->query("SELECT id, nik_dinilai, nama_dinilai, nik_p1, nama_p1, nik_p2, nama_p2, nik_p3, nama_p3 FROM data_matrix_ppk WHERE nik_dinilai IN ($nik_string)"); 
+		$query = $this->db->query("SELECT id, nik_dinilai, nama_dinilai, nik_p1, nama_p1, nik_p2, nama_p2, nik_p3, nama_p3 FROM data_matrix_ppk WHERE id IN ($nik_string)"); 
 		return $query->result_array(); 
 	}
 
 
   public function data_all() {
-    // $office = $this->session->userdata('nip_btn');
-    $query = $this->db->query("SELECT name, nip_btn FROM data_karyawan WHERE cd_office = '000'  ORDER BY name ASC  ");
+    $nik_sesi = $this->session->userdata('nip_btn');
+
+		if ($nik_sesi == '000') {
+			$where_office = '000';
+		}elseif ($nik_sesi == '001') {
+			$where_office = '001';
+		}elseif ($nik_sesi == '002') {
+			$where_office = '002';
+		}elseif ($nik_sesi == '003') {
+			$where_office = '003';
+		}
+    $query = $this->db->query("SELECT name, nip_btn FROM data_karyawan WHERE cd_office = '$where_office'  ORDER BY name ASC  ");
     return $query->result_array();
   }
 
@@ -149,7 +159,7 @@ class M_matrix extends CI_Model
             kode_organisasi_p3 = $org_p3,
             pembaharuan = $pembaruan
             
-          WHERE nik_dinilai = $nik";
+          WHERE id = $nik";
   
       // Eksekusi query
       $this->db->query($sql);

@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+ 
 	<?php $this->load->view('cover/header'); ?>
 	<style>
 	    .btn-xs {
@@ -120,9 +121,9 @@
    -->
     <button type="submit" class="btn btn-info" style="margin-left: 20px;">Simpan <i class="far fa-edit"></i></button>
     
-  <?php foreach ($knx as $index => $p): ?>    
+  <?php foreach ($get_data_penilai as $index => $p): ?>    
   
-    <div class="card-body mb-1">
+    <div class="card-body mb-3">
     <div class="row">  
       <div class="col-lg-3">
         <div class="card-client">
@@ -135,10 +136,10 @@
           <p class="name-client">
           <select id="dinilai_<?= $index ?>" class="form-select select2 select-karyawan" name="dinilai1[]" disabled>
               <option value="">Pilih Karyawan</option>
-              <option value="<?= $p['nik_dinilai']; ?>" selected><?= $p['nama_dinilai']; ?></option>
+              <option value="<?= $p['id']; ?>" selected><?= $p['nama_dinilai']; ?></option>
           </select> 
             <span id="getdeep_dinilai_<?= $index ?>"></span>
-            <input type="hidden" name="dinilai1[]" value="<?= $p['nik_dinilai']; ?>">
+            <input type="hidden" name="dinilai1[]" value="<?= $p['id']; ?>">
 
           </p>
         </div>
@@ -150,11 +151,12 @@
               <path d="M224 256c70.7 0 128-57.31 128-128s-57.3-128-128-128C153.3 0 96 57.31 96 128S153.3 256 224 256zM274.7 304H173.3C77.61 304 0 381.6 0 477.3c0 19.14 15.52 34.67 34.66 34.67h378.7C432.5 512 448 496.5 448 477.3C448 381.6 370.4 304 274.7 304z"></path>
             </svg>
           </div>
+
           <label class="form-label">Nama Penilai 1 :</label>
           <p class="name-client">
           <select id="dinilai_<?= $index ?>" class="form-select select2 select-karyawan" name="penilai1[]">
               <option value="">Pilih Karyawan</option>
-              <?php foreach ($kmn as $karyawan): ?>
+              <?php foreach ($get_data_karyawan as $karyawan): ?>
           <option value="<?= $karyawan['nip_btn'] ?>" 
             <?= $karyawan['name'] == $p['nama_p1'] ? 'selected' : '' ?>>
             <?= $karyawan['name'] ?>
@@ -162,8 +164,7 @@
           <?php endforeach; ?>
           </select> 
             <span id="getdeep_dinilai_<?= $index ?>"></span>
-            <!-- <input type="hidden" name="dinilai1[]" value="<?= $p['nik_dinilai']; ?>"> -->
-
+            
           </p>
         </div>
       </div>
@@ -179,7 +180,7 @@
           
             <select id="penilai_<?= $index ?>" class="form-select select2 select-karyawan" name="penilai2[]">
             <option value="">Pilih Karyawan</option>
-            <?php foreach ($kmn as $karyawan): ?>
+            <?php foreach ($get_data_karyawan as $karyawan): ?>
                 <option value="<?= $karyawan['nip_btn'] ?>" 
                     <?= $karyawan['name'] == $p['nama_p2'] ? 'selected' : '' ?>>
                     <?= $karyawan['name'] ?>
@@ -202,7 +203,7 @@
           
             <select id="penilai_<?= $index ?>" class="form-select select2 select-karyawan" name="penilai3[]">
             <option value="">Pilih Karyawan</option>
-            <?php foreach ($kmn as $karyawan): ?>
+            <?php foreach ($get_data_karyawan as $karyawan): ?>
                 <option value="<?= $karyawan['nip_btn'] ?>" 
                     <?= $karyawan['name'] == $p['nama_p3'] ? 'selected' : '' ?>>
                     <?= $karyawan['name'] ?>
@@ -226,7 +227,18 @@
     </div>
     </div>
   </div>
+<script>
+  <script>
+  $(document).ready(function() {
+    $('.select-karyawan').select2({
+      placeholder: "Pilih Karyawan",
+      allowClear: true,
+      width: '100%' // pastikan select2 full width sesuai container
+    });
+  });
+</script>
 
+</script>
 </body>
 <?php $this->load->view('cover/footer')?>
 </html>

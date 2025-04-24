@@ -4,6 +4,7 @@
 <html>
 <head>
 	<?php $this->load->view('cover/header'); ?>
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
   <style>
     
  /* From Uiverse.io by abrahamcalsin */ 
@@ -87,7 +88,7 @@
                         </div>
                       </div>
                       <div class="col-auto">
-                        <img style="width: 100px; height: 60px;" src="<?php echo base_url('assets/img/cuti.svg')?>">
+                        <img style="width: 100px; height: 60px;" src="<?php echo base_url('assets/img/addMatriks.svg')?>">
                         <!-- <i class="fas fa-calendar-check fa-3x " style="color: #74C0FC;"></i> -->
                       </div>
                     </div>
@@ -95,9 +96,17 @@
                 </div>
               </div>
                	
-                <button class="btn btn-info mb-3" onclick="history.back()"><- Kembali</button>
-                <button class="btn btn-warning mb-3" id="addPenilai" name="addPenilai">Tambah <i class="far fa-plus-square"></i></button>
-                <button class="btn btn-success mb-3" onclick="simpanSaja()">Simpan <i class="fas fa-save"></i></button>
+                <button class="btn btn-info  mb-3" onclick="history.back()">
+                  <span class="icon text-white-50">
+                     <i class="fas fa-arrow-left"></i>
+                  </span>Kembali</button>
+                <button class="btn btn-warning mb-3" id="addPenilai" name="addPenilai">Tambah 
+                  <span class="icon text-white-80">
+                    <i class="far fa-plus-square"></i>
+                  </span></button>
+                <button class="btn btn-success mb-3" onclick="simpanSaja()">Simpan 
+                  <span class="icon text-white-80">
+                    <i class="fas fa-save"></i></span></button>
 
               <div class="card">
                 <div class="card-body">
@@ -117,7 +126,7 @@
        <select id="Dinilai_1" class="form-control select2" name="dinilai1">
          <option value="">Pilih Karyawan</option>
          <?php foreach ($nilai as $k) { ?>
-         <option value="<?=$k['nip_btn'] .'|'. $k['name'] ?>"><?= $k['name']; ?></option>
+         <option value="<?=$k['nik_dinilai'] .'|'. $k['nama_dinilai'] ?>"><?= $k['nama_dinilai']; ?></option>
          <?php } ?>
        </select>
             <span id="getdeep_1"></span>
@@ -300,7 +309,7 @@ $(document).ready(function () {
     <hr class="garis">
     <div class="penilai-set" data-set="${count}">
       <button class="removePenilai btn btn-danger"><i class="fas fa-minus"></i> </button>
-      <div class="card">
+      
         <div class="card-body">
           <div class="row">
             <div class="col-lg-3">
@@ -315,7 +324,7 @@ $(document).ready(function () {
                   <select id="Dinilai_${count}" class="form-control select2 dinilai" name="dinilai${count}">
                     <option value="">Pilih Karyawan</option>
                     <?php foreach ($nilai as $k) { ?>
-                      <option value="<?= $k['nip_btn'] . '|' . $k['name'] ?>"><?= $k['name'] ?></option>
+                      <option value="<?= $k['nik_dinilai'] . '|' . $k['nama_dinilai'] ?>"><?= $k['nama_dinilai'] ?></option>
                     <?php } ?>
                   </select>
                   <span id="getdeep_${count}"></span>
@@ -372,7 +381,7 @@ $(document).ready(function () {
             </div>
           </div>
         </div>
-      </div>
+      
     </div>`;
 
     $('#penilaiContainer').append(newSet);
@@ -512,7 +521,12 @@ console.log(setId);
 
   console.log(penilaiData);
   if (penilaiData.length === 0) {
-    alert('Tidak ada data yang dipilih. Mohon isi setidaknya satu penilaian.');
+    // alert('Tidak ada data yang dipilih. Mohon isi setidaknya satu penilaian.');
+    Swal.fire({
+      title : "Info!", 
+      text  : "tidak ada data yang dipilih, Mohon isi setidaknya satu penilaian", 
+      icon  : "info"
+    }); 
     return;
   }
 
@@ -524,7 +538,12 @@ console.log(setId);
     dataType: 'json',
     success: function (response) {
       if (response.status === 'success') {
-        alert('Data berhasil disimpan!');
+        // alert('Data berhasil disimpan!');
+        Swal.fire({
+          title : "Sukses!", 
+          text  : "Data berhasil disimpan", 
+          icon  : "success"
+        }); 
         console.log("data :", penilaiData);
         //location.reload(); // Refresh halaman setelah menyimpan (opsional)
         window.location.href = "<?= site_url('C_matrix_penilaian'); ?>";

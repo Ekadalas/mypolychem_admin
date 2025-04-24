@@ -18,12 +18,12 @@ class C_matrix_penilaian extends CI_Controller
 		$this->load->view('v_matrix', $data);
 	}
 
-	public function tambah() {
+public function tambah() {
 
 	$nik_sesi = $this->session->userdata('nip_btn');
 
 	if ($nik_sesi == '00') {
-		$as_nik = '000';
+		$as_nik = 'HO';
 	} elseif ($nik_sesi == '01') {
 		$as_nik = '001';
 	} elseif ($nik_sesi == '02') {
@@ -34,25 +34,26 @@ class C_matrix_penilaian extends CI_Controller
 		$as_nik = 'UNKNOW';
 	}
 
-		$hasil =  $this->db->select(['name','nip_btn'])
-				 ->from('data_karyawan')
-				 ->where('cd_office', $as_nik)
-				 ->order_by('name', 'ASC')
+		$hasil =  $this->db->select(['nama_dinilai','nik_dinilai'])
+				 ->from('data_matrix_ppk')
+				 ->where('office', $as_nik)
+				 ->order_by('nama_dinilai', 'ASC')
 				 ->get();
 		$data['nilai'] = $hasil->result_array();
 
 
 	$this->load->view('v_new_penilaian', $data);
 
-	}
+}
+
 	public function getDepartemen() {
 
 		$nik = $this->input->post('nik_dinilai');
 
 
 		$res = $this->db->select(['departemen'])
-					    ->from('data_karyawan')
-					    ->where('nip_btn', $nik)
+					    ->from('data_matrix_ppk')
+					    ->where('nik_dinilai', $nik)
 					    ->get();
 	    $data['departemen'] = $res->result_array();
 
@@ -173,80 +174,6 @@ class C_matrix_penilaian extends CI_Controller
     echo json_encode(['status' => 'success']);
 }
 
-// public function update_multiple() {
-//     // Ambil data dari form POST
-//     $p1s = $this->input->post('penilai1');
-//     $p2s = $this->input->post('penilai2');
-//     $p3s = $this->input->post('penilai3');
-//     $niks = $this->input->post('dinilai1');
-
-//     // Pastikan semua input adalah array
-//     if (!is_array($p1s)) $p1s = [];
-//     if (!is_array($p2s)) $p2s = [];
-//     if (!is_array($p3s)) $p3s = [];
-//     if (!is_array($niks)) $niks = [];
-
-//     // 1. Gabungkan semua NIK penilai dan hapus duplikat
-//     $all_penilai_niks = array_unique(array_merge($p1s, $p2s, $p3s));
-
-//     // 2. Ambil data penilai dari database
-//     $this->db->select('nik_dinilai, kode_organisasi, nama_dinilai');
-//     $this->db->from('data_matrix_ppk');
-//     $this->db->where_in('nik_dinilai', $all_penilai_niks);
-//     $query = $this->db->get();
-//     $result = $query->result_array();
-
-//     // 3. Buat mapping nik_dinilai => detail
-//     $penilai_info_map = [];
-//     foreach ($result as $row) {
-//         $penilai_info_map[$row['nik_dinilai']] = [
-//             'kode_organisasi' => $row['kode_organisasi'],
-//             'nama_dinilai' => $row['nama_dinilai']
-//         ];
-//     }
-
-//     // 4. Gabungkan data untuk tiap baris input
-//     $data = [];
-
-//     foreach ($niks as $index => $nik) {
-//         $p1 = $p1s[$index] ?? null;
-//         $p2 = $p2s[$index] ?? null;
-//         $p3 = $p3s[$index] ?? null;
-
-//         $data[] = [
-//             'nik' => $nik,
-
-//             'p1' => $p1,
-//             'kode_organisasi_p1' => $penilai_info_map[$p1]['kode_organisasi'] ?? null,
-//             'nama_p1' => $penilai_info_map[$p1]['nama_dinilai'] ?? null,
-
-//             'p2' => $p2,
-//             'kode_organisasi_p2' => $penilai_info_map[$p2]['kode_organisasi'] ?? null,
-//             'nama_p2' => $penilai_info_map[$p2]['nama_dinilai'] ?? null,
-
-//             'p3' => $p3,
-//             'kode_organisasi_p3' => $penilai_info_map[$p3]['kode_organisasi'] ?? null,
-//             'nama_p3' => $penilai_info_map[$p3]['nama_dinilai'] ?? null,
-
-//             'pembaharuan' => date('Y-m-d H:i:s'),
-//         ];
-//     }
-
-//     // Tampilkan hasil untuk debugging
-//     echo '<pre>';
-//     var_dump($data);
-//     echo '</pre>';
-
-
-	
-// 	// $result = $this->M_matrix->update_multiple_matriks($data);
-
-// 	// $this->session->set_flashdata('success', 'Data berhasil diperbarui!');
-
-
-// 	// redirect('C_matrix_penilaian');
-// }
-
 
 
 
@@ -321,40 +248,29 @@ foreach ($niks as $index => $nik) {
 }
 
 	public function hapus() {
-		$aadc = $this->input->get('input_nik[]');
-		$ap1  = $this->input->get('p1');
-		$ap2  = $this->input->get('p2');
-		$ap3  = $this->input->get('p3');
+		$id_apus = $this->input->post('input_id');
 
-		// $nikArray = explode(',', $aadc);
+		if (!empty($id_apus)) {
+		$this->db->where_in('id', $id_apus);
+		$this->db->delete('data_matrix_ppk');
 
-		$dataNik = [
-			'nik_dinilai' => $aadc,
-			'nik_p1' => $ap1,
-			'nik_p2' => $ap2,
-			'nik_p3' => $ap3
- 		];
+		echo json_encode(['status' => 'sukses']);	
+		} else {
 
-		echo '<pre>';
-		var_dump($nikArray);
-		echo '</pre>';
-
-		// Menghapus data berdasarkan array NIK
-		// $this->db->where_in('nik_dinilai', $nikArray);
-		// $this->db->delete('data_matrix_ppk');
-
-		// $this->session->set_flashdata('hapus_berhasil', 'Data berhasil dihapus.');
-
-
-		// redirect('C_matrix_penilaian');
+		echo json_encode(['status' => 'error', 'message' => 'Data tidak terhapus']);
+		}
 	}
 
 	public function edit_penilai() {
 
-		$nik_string = $this->input->get('input_nik'); // "1234,5678,91011"
-		$nik = explode(',', $nik_string); // jadi array: ['1234', '5678', '91011']
+		// $nik_string = $this->input->get('input_id'); // "1234,5678,91011"
+		// $nik = explode(',', $nik_string); // jadi array: ['1234', '5678', '91011']
 		
-		$this->session->set_userdata('input_nik', $nik);
+		// var_dump($nik);
+		$nik = $this->input->get('input_id'); // Sudah array
+
+
+		$this->session->set_userdata('input_id', $nik);
 		
 		$office = $this->session->userdata('nip_btn');
 		if ($office == '000') {
@@ -369,9 +285,9 @@ foreach ($niks as $index => $nik) {
 			$ktr = 'UNKNOW'; 
 		}
 
-		$data['knx'] = $this->M_matrix->penilai($nik);
-		$data['mmx'] = $this->M_matrix->data_matriks($ktr);
-		$data['kmn'] = $this->M_matrix->data_all(); 
+		$data['get_data_penilai'] = $this->M_matrix->penilai($nik);
+		$data['get_data_matriks'] = $this->M_matrix->data_matriks($ktr);
+		$data['get_data_karyawan'] = $this->M_matrix->data_all(); 
 		
 
 		
