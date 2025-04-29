@@ -20,10 +20,12 @@ class C_matrix_penilaian extends CI_Controller
 
  public function tambah() {
 
+
   $nik_sesi = $this->session->userdata('nip_btn');
 
   if ($nik_sesi == '00') {
-    $as_nik = 'HO';
+    $as_nik = '000';
+    $as_of  = 'HO'; 
   } elseif ($nik_sesi == '01') {
     $as_nik = 'MRK';
   } elseif ($nik_sesi == '02') {
@@ -34,32 +36,40 @@ class C_matrix_penilaian extends CI_Controller
     $as_nik = 'UNKNOW';
   }
 
-  $sql = "SELECT a.nik_dinilai, a.nama_dinilai, b.nik_dinilai 
-      FROM data_matrix_approve_cuti a LEFT JOIN data_matrix_ppk b 
-      ON a.nik_dinilai = b.nik_dinilai LEFT JOIN data_karyawan c 
-      ON a.nik_dinilai = c.nip_btn WHERE a.office = ? 
-      AND c.level = 'user' 
-      GROUP BY a.nik_dinilai 
-      ORDER BY a.nama_dinilai;";
-  $query = $this->db->query($sql, array($as_nik));
-    $data['nilai'] = $query->result_array();
+  // $sql = "SELECT nip_btn , name 
+  // 		  FROM data_karyawan a 
+  		 
+  // 		  WHERE cd_office = ? 
+  // 		  AND level = 'user'
+  // 		  GROUP by nip_btn 
+  // 		  ORDER BY name ASC";
+  // $query = $this->db->query($sql, array($as_nik));
+  $hashas = $this->db->query("SELECT departemen, nip_btn , name 
+  		  FROM data_karyawan 
+  		  WHERE cd_office = '$as_nik'
+  		  AND level = 'user'
+  		  GROUP by nip_btn 
+  		  ORDER BY name ASC;"); 
+    $data['nilai'] = $hashas->result_array();
 
   $this->load->view('v_new_penilaian', $data);
 
 }
 
+
   public function getDepartemen() {
 
-    $nik = $this->input->post('nik_dinilai');
+     $nik = $this->input->post('nik_dinilai');
 
-      $res = "SELECT a.departemen, a.nik_dinilai
-          FROM data_matrix_approve_cuti a 
-          JOIN data_matrix_ppk b 
-          ON a.nik_dinilai = b.nik_dinilai
-          WHERE a.nik_dinilai = ?"; 
+      $res = "SELECT departemen, nip_btn , unit_kerja
+          FROM data_karyawan
+          WHERE nip_btn = ?"; 
       $get_res = $this->db->query($res, array($nik)); 
       $data['departemen'] = $get_res->result_array();           
+
+
       echo json_encode($data);
+
   }
 
 
@@ -68,116 +78,152 @@ class C_matrix_penilaian extends CI_Controller
 		$nik_sesi = $this->session->userdata('nip_btn');
 
 		if ($nik_sesi == '00') {
-			$of = 'HO';
+			$of = '000';
 		} elseif ($nik_sesi == '01') {
-			$of = 'MRK';
+			$of = '001';
 		} elseif ($nik_sesi == '02') {
-			$of = 'TGR';
+			$of = '002';
 		} elseif ($nik_sesi == '03') {
-			$of = 'KRW';
+			$of = '003';
 		} else {
 			$of = 'UNKNOW';
 		}
 
 		$depart = $this->input->post('departemen');
 
-		$sql = $this->db->select(['nama_dinilai','nik_dinilai'])
-						->from('data_matrix_ppk')
+		$sql = $this->db->select(['name','nip_btn'])
+						->from('data_karyawan')
 						// ->where('departemen' , $depart, 'AND')
-						->where('office', $of)
-						->group_by('nama_dinilai', 'departemen')
+						->where('cd_office', $of , 'AND')
+            ->where('level', 'user')
+						->group_by('name', 'departemen')
 						->get();
 		$data['namaDin'] = $sql->result_array();
 
 		echo json_encode($data);
 	}
 
-  public function simpanSave() {
+ public function simpanSave()
+{
+    
+    $mapOffice = [
+        '00' => 'HO',
+        '01' => 'MRK',
+        '02' => 'TGR',
+        '03' => 'KRW',
+    ];
+    $nik_sesi = $this->session->userdata('nip_btn');
+    $as_nik = isset($mapOffice[$nik_sesi]) ? $mapOffice[$nik_sesi] : 'UNKNOW';
+
     $penilaiData = json_decode($this->input->post('penilaiData'), true);
-
-    if (empty($penilaiData)) {
-        echo json_encode(['status' => 'error', 'message' => 'Data kosong']);
-        return;
+    if (empty($penilaiData) || !is_array($penilaiData)) {
+        return $this->output
+                    ->set_content_type('application/json')
+                    ->set_output(json_encode(['status'=>'error','message'=>'Data kosong atau format salah']));
     }
 
-    foreach ($penilaiData as $penilaian) {
-        $data = [
-            'nama_dinilai' => $penilaian['dinilai'],
-            'nik_dinilai' => $penilaian['nik_dinilai'],
-            'nama_p1' => $penilaian['penilai1'],
-            'nik_p1'  => $penilaian['nik_penilai1'],
-            'nama_p2' => $penilaian['penilai2'],
-            'nik_p2'  => $penilaian['nik_penilai2'],
-            'nama_p3' => $penilaian['penilai3'],
-            'nik_p3'  => $penilaian['nik_penilai3'],
-            'pembaharuan' => date('Y-m-d H:i:s') // Menyimpan waktu input (opsional)
+    $allNiks = [];
+    foreach ($penilaiData as $p) {
+        $allNiks[] = $p['nik_dinilai'];
+        $allNiks[] = $p['nik_penilai1'];
+        $allNiks[] = $p['nik_penilai2'];
+        $allNiks[] = $p['nik_penilai3'];
+    }
+    $allNiks = array_unique($allNiks);
+
+    $rows = $this->db
+        ->select('nik_dinilai, periode_ppk, office, departemen, kode_organisasi, organisasi_ppk, posisi')
+        ->where_in('nik_dinilai', $allNiks)
+        ->get('data_matrix_ppk')
+        ->result_array();
+    // mapping by nik
+    $mapMatrix = [];
+    foreach ($rows as $r) {
+        $mapMatrix[$r['nik_dinilai']] = $r;
+    }
+
+    log_message('debug', '== MULAI simpanSave ==');
+
+    $urutWaktu = "SELECT periode_ppk FROM data_matrix_ppk ORDER BY pembaharuan DESC LIMIT 1;";
+    $filter    = $this->db->query($urutWaktu)->row_array();
+
+    $batch = [];
+    $now = date('Y-m-d H:i:s');
+    foreach ($penilaiData as $p) {
+        $dinilaiNik = $p['nik_dinilai'];
+        $m = isset($mapMatrix[$dinilaiNik]) ? $mapMatrix[$dinilaiNik] : null;
+
+        if ($m) {
+           log_message('debug', "FOUND matrix untuk {$dinilaiNik}");
+            $periode_ppk       = $m['periode_ppk'];
+            $office            = $m['office'];
+            $departemen        = $m['departemen'];
+            $kode_organisasi   = $m['kode_organisasi'];
+            $org_ppk           = $m['organisasi_ppk'];
+            $posisi            = $m['posisi'];
+        } elseif(empty($m)) {
+           log_message('debug', "FALLBACK dipanggil untuk {$dinilaiNik}");
+            $deptRow = $this->db
+                            ->select('departemen')
+                            ->where('nip_btn', $dinilaiNik)
+                            ->from('data_karyawan')
+                            ->get() 
+                            ->row_array();
+            log_message('debug', 'deptRow: '. print_r($deptRow, true));
+            //$periode_ppk     = date('Y') . '02';
+            $periode_ppk     = $filter['periode_ppk'] ?? date('Y') . '02'; 
+            $office          = $as_nik;
+            $departemen      = $deptRow['departemen'] ?? null;
+            $kode_organisasi = null;
+            $org_ppk         = null;
+            $posisi          = null;
+        }
+
+        $getKodeOrg = function($nik) use ($mapMatrix) {
+            if (isset($mapMatrix[$nik])) {
+                return $mapMatrix[$nik]['kode_organisasi'];
+            }
+            return null;
+        };
+
+        $batch[] = [
+            'periode_ppk'            => $periode_ppk,
+            'office'                 => $office,
+            'departemen'             => $departemen,
+            'kode_organisasi'        => $kode_organisasi,
+            'organisasi_ppk'         => $org_ppk,
+            'posisi'                 => $posisi,
+            'nik_dinilai'            => $dinilaiNik,
+            'nama_dinilai'           => $p['dinilai'],
+            'kode_organisasi_p1'     => $getKodeOrg($p['nik_penilai1']),
+            'nik_p1'                 => $p['nik_penilai1'],
+            'nama_p1'                => $p['penilai1'],
+            'kode_organisasi_p2'     => $getKodeOrg($p['nik_penilai2']),
+            'nik_p2'                 => $p['nik_penilai2'],
+            'nama_p2'                => $p['penilai2'],
+            'kode_organisasi_p3'     => $getKodeOrg($p['nik_penilai3']),
+            'nik_p3'                 => $p['nik_penilai3'],
+            'nama_p3'                => $p['penilai3'],
+            'pembaharuan'            => $now,
         ];
-
-      $hasil =   $this->db->select(['periode_ppk', 'office', 'departemen', 'kode_organisasi', 'organisasi_ppk', 'posisi'])
-        		 ->from('data_matrix_ppk')
-        		 ->where('nik_dinilai', $data['nik_dinilai'])
-        		 ->get();
-      $sql  = $hasil->row_array();
-      if (!empty($sql)) {
-      	 $periode_ppk = $sql['periode_ppk'];
-      	 $office      = $sql['office'];
-      	 $departemen  = $sql['departemen'];
-      	 $kode_organisasi = $sql['kode_organisasi'];
-      	 $org_ppk         = $sql['organisasi_ppk'];
-      	 $posisi          = $sql['posisi'];
-      } else {
-      	$periode_ppk = $office = $departemen = $kode_organisasi = $org_ppk = $posisi = null;
-      }
-
-      $hs = $this->db->select('kode_organisasi')
-      				 ->from('data_matrix_ppk')
-      				 ->where('nik_dinilai', $data['nik_p1'])
-      				 ->get();
-      $query = $hs->row_array();
-      $kode_p1 = !empty($query) ? $query['kode_organisasi'] : null;
-
-      $hd = $this->db->select('kode_organisasi')
-      				 ->from('data_matrix_ppk')
-      				 ->where('nik_dinilai', $data['nik_p2'])
-      				 ->get();
-      $dataset = $hd->row_array();
-      $kode_p2 = !empty($query) ? $dataset['kode_organisasi'] : null;
-
-      $hx = $this->db->select('kode_organisasi')
-      				 ->from('data_matrix_ppk')
-      				 ->where('nik_dinilai', $data['nik_p3'])
-      				 ->get();
-      $setda = $hx->row_array();
-      $kode_p3 = !empty($setda) ? $setda['kode_organisasi'] : null;
-
-      $fixaxi = [
-      	'periode_ppk' => $periode_ppk,
-      	'office'      => $office,
-      	'departemen'  => $departemen,
-      	'kode_organisasi' => $kode_organisasi,
-      	'organisasi_ppk'  => $org_ppk,
-      	'posisi'          => $posisi,
-      	'nik_dinilai'     => $data['nik_dinilai'],
-      	'nama_dinilai'    => $data['nama_dinilai'],
-      	'kode_organisasi_p1' => $kode_p1,
-      	'nik_p1'             => $data['nik_p1'],
-      	'nama_p1'            => $data['nama_p1'],
-      	'kode_organisasi_p2' => $kode_p2,
-      	'nik_p2'             => $data['nik_p2'],
-      	'nama_p2'            => $data['nama_p2'],
-      	'kode_organisasi_p3' => $kode_p3,
-      	'nik_p3'             => $data['nik_p3'],
-      	'nama_p3'            => $data['nama_p3'],
-      	'pembaharuan'        => $data['pembaharuan']
-      ];
-
-      $this->db->insert('data_matrix_ppk', $fixaxi);
     }
 
-    echo json_encode(['status' => 'success']);
+    $this->db->trans_start();
+      $this->db->insert_batch('data_matrix_ppk', $batch);
+    $this->db->trans_complete();
+
+    if ($this->db->trans_status() === FALSE) {
+        $status = ['status'=>'error','message'=>'Gagal menyimpan ke database'];
+    } else {
+        $status = ['status'=>'success'];
+    }
+
+    return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($status));
 }
 
-
+  
 
 
 public function update_multiple() {
@@ -187,8 +233,10 @@ $p2s = $this->input->post('penilai2');
 $p3s = $this->input->post('penilai3');
 $niks = $this->input->post('dinilai1');
 
+
 // 1. Gabungkan semua NIK dari p1, p2, p3 dan hapus duplikat
 $all_penilai_niks = array_unique(array_merge($p1s, $p2s, $p3s));
+
 
 // 2. Ambil kode_organisasi dan nama_dinilai dari DB
 $this->db->select('nik_dinilai, kode_organisasi, nama_dinilai');
@@ -237,7 +285,7 @@ foreach ($niks as $index => $nik) {
 		// var_dump($data);
 		// echo '</pre>';
 
-	$result = $this->M_matriks->update_multiple_matriks($data);
+	$result = $this->M_matrix->update_multiple_matriks($data);
 
 	$this->session->set_flashdata('success', 'Data berhasil diperbarui!');
 
@@ -246,6 +294,7 @@ foreach ($niks as $index => $nik) {
 
 
 }
+
 	public function hapus() {
 		$id_apus = $this->input->post('input_id');
 
@@ -262,42 +311,59 @@ foreach ($niks as $index => $nik) {
 
 	public function edit_penilai() {
 
-		$nik_string = $this->input->get('input_nik'); // "1234,5678,91011"
-		$nik = explode(',', $nik_string); // jadi array: ['1234', '5678', '91011']
-		$this->session->set_userdata('input_nik', $nik);
+		// $nik_string = $this->input->get('input_id'); // "1234,5678,91011"
+		// $nik = explode(',', $nik_string); // jadi array: ['1234', '5678', '91011']
+		
+		// var_dump($nik);
+		$nik = $this->input->get('input_id'); // Sudah array
 
 
+		$this->session->set_userdata('input_id', $nik);
+		
 		$office = $this->session->userdata('nip_btn');
-		if ($office == '00') {
-			$ktr = 'HO';
-		} elseif ($office == '01') {
-			$ktr = 'MRK';
-		} elseif ($office == '02') {
-			$ktr = 'TGR';
-		} elseif ($office == '03') {
+		if ($office == '000') {
+			$ktr = 'HO'; 
+		} elseif ($office == '001') {
+			$ktr = 'MRK'; 
+		} elseif ($office == '002') {
+			$ktr = 'TGR'; 
+		} elseif ($office == '003') {
 			$ktr = 'KRW';
 		} else {
-			$ktr = 'UNKNOW';
+			$ktr = 'UNKNOW'; 
 		}
 
-		$data['knx'] = $this->M_matrix->penilai($nik);
-		$data['mmx'] = $this->M_matrix->data_matriks($ktr);
-		$data['kmn'] = $this->M_matrix->data_all();
+		$data['get_data_penilai'] = $this->M_matrix->penilai($nik);
+		$data['get_data_matriks'] = $this->M_matrix->data_matriks($ktr);
+		$data['get_data_karyawan'] = $this->M_matrix->data_all(); 
+		
 
-		var_dump($data);
-		//$this->load->view('v_edit_penilai', $data);
+		
+		$this->load->view('v_edit_penilai', $data);
+		
+
 	}
+	
 
 
 	public function alertNIK() {
         $input_nik = $this->input->post('input_nik'); // array dari checkbox
 
         if (!empty($input_nik)) {
-            $nik_list = implode(', ', $input_nik);
+            $nik_list = explode(', ', $input_nik);
             echo "NIK yang dipilih: " . $nik_list;
         } else {
             echo "Tidak ada NIK yang dipilih.";
         }
     }
 
+    public function departemen_get_select() {
+
+      $sql = "SELECT departemen, nip_btn , unit_kerja
+          FROM data_karyawan 
+          WHERE nip_btn = ?"; 
+      $get_sql = $this->db->query($sql, array($nik)); 
+      $data['depart'] = $get_sql->result_array();   
+      $this->load->view('v_new_penilaian', $data);    
+    }
 }
