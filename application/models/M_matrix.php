@@ -22,10 +22,7 @@ class M_matrix extends CI_Model
     $office = 'KRW';
   }
 
-	$data_matrix = $this->db->query("SELECT *
-	FROM data_matrix_ppk
-	WHERE office = '$office'
-	ORDER BY nama_dinilai ASC");
+	$data_matrix = $this->db->query("SELECT a.id, a.periode_ppk ,a.nik_dinilai, a.nama_dinilai, b.departemen , b.unit_kerja, a.nama_p1, a.nama_p2, a.nama_p3 FROM data_matrix_ppk a LEFT JOIN data_karyawan b ON a.nik_dinilai = b.nip_btn WHERE a.office = '$office' ORDER BY a.nama_dinilai ASC;");
 
 	return $data_matrix->result_array();
 	}
@@ -165,7 +162,12 @@ class M_matrix extends CI_Model
       $this->db->query($sql);
     }
   }
-  
+    
+   public function organisasi() {
+
+    $org = $this->db->query("SELECT organisasi_ppk FROM data_matrix_ppk GROUP BY organisasi_ppk;"); 
+    $HasOrg = $org->result_array(); 
+   }
 
 
 
