@@ -28,12 +28,14 @@ class C_matrix_penilaian extends CI_Controller
   } elseif ($nik_sesi == '01') {
     $as_nik = '001';
   } elseif ($nik_sesi == '02') {
-    $as_nik = '002';
+    $as_nik = '002'; 
   } elseif ($nik_sesi == '03') {
-    $as_nik = '003';
+    $as_nik = '003'; 
   } else {
     $as_nik = 'UNKNOW';
   }
+
+ 
 
   $hashas = $this->db->query("SELECT departemen, nip_btn , name 
   		  FROM data_karyawan 
@@ -42,6 +44,8 @@ class C_matrix_penilaian extends CI_Controller
   		  GROUP by nip_btn 
   		  ORDER BY name ASC;"); 
     $data['nilai'] = $hashas->result_array();
+
+   // var_dump($data['nilai']); 
 
   $this->load->view('v_new_penilaian', $data);
 

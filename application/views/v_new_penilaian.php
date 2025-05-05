@@ -22,7 +22,6 @@
   color: #fff;
   font-family: "Poppins", sans-serif;
   transition: all 0.3s ease;
-  /*margin: 10px;*/
 }
 
 .card-client:hover {
@@ -89,7 +88,6 @@
                       </div>
                       <div class="col-auto">
                         <img style="width: 100px; height: 60px;" src="<?php echo base_url('assets/img/addMatriks.svg')?>">
-                        <!-- <i class="fas fa-calendar-check fa-3x " style="color: #74C0FC;"></i> -->
                       </div>
                     </div>
                   </div>
