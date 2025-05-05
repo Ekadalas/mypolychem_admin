@@ -78,7 +78,20 @@
                   </div>
                 </div>
               </div>
-<!--
+
+              <div style="
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  height: 70vh;
+                  padding: 20px;
+                  box-sizing: border-box;
+              ">
+                <img src="<?= base_url('assets/img/hello.svg'); ?>" 
+                     style="max-width: 100%; height: 300px;">
+              </div>
+
+<!--  
                  
  <?php 
              
@@ -451,7 +464,7 @@ if (cuti.every(value => value === 0)) {
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; MYPOLYCHEM 2024</span>
+                        <span>Copyright &copy; MYPOLYCHEM <?php echo date('Y'); ?></span>
                     </div>
                 </div>
             </footer>
