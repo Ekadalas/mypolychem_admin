@@ -6,59 +6,89 @@
   <?php $this->load->view('cover/header'); ?>
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
   <style>
-    
- /* From Uiverse.io by abrahamcalsin */ 
-.card-client {
-  background: #3E3F5B;
-  width: 13rem;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  padding-left: 10px;
-  padding-right: 10px;
-  border: 4px solid #7cdacc;
-  box-shadow: 0 6px 10px rgba(207, 212, 222, 1);
+    /* From Uiverse.io by andrew-demchenk0 */ 
+/* before adding the photo to the div with the "card-photo" class, in the css clear the styles for .card-photo and remove .card-photo::before and .card-photo::after, then set the desired styles for .card- photo. */
+
+.card-new {
+  --font-color: #001F3F;
+  --font-color-sub: #001F3F;
+  --bg-color: #fff;
+  --main-color: #001F3F;
+  width: 200px;
+  height: 280px;
+  background: var(--bg-color);
+  border: 2px solid var(--main-color);
+  box-shadow: 4px 4px var(--main-color);
   border-radius: 10px;
-  text-align: center;
-  color: #fff;
-  font-family: "Poppins", sans-serif;
-  transition: all 0.3s ease;
-}
-
-.card-client:hover {
-  transform: translateY(-10px);
-}
-
-.user-picture {
-  overflow: hidden;
-  object-fit: cover;
-  width: 5rem;
-  height: 5rem;
-  border: 4px solid #7cdacc;
-  border-radius: 999px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  margin: auto;
+  padding: 15px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
 }
 
-.user-picture svg {
-  width: 2.5rem;
-  fill: currentColor;
+.card-photo {
+  width: 120px;
+  height: 120px;
+  background: url(<?= base_url('assets/img/employ.png'); ?>) center/cover no-repeat;
+  background-color: #ccc;
+  border-radius: 50%;
+  margin-top: 10px;
+  transition: transform 0.3s;
 }
 
-.name-client {
-  margin: 0;
+.card-title {
+  text-align: center;
+  color: var(--font-color);
+  font-size: 20px;
+  font-weight: 400;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.card-title span {
+  font-size: 15px;
+  color: var(--font-color-sub);
+}
+
+.card-socials {
+  display: flex;
+  height: 0;
+  opacity: 0;
   margin-top: 20px;
-  font-weight: 600;
-  font-size: 18px;
+  gap: 20px;
+  transition: 0.5s;
 }
 
-.name-client span {
-  display: block;
-  font-weight: 200;
-  font-size: 16px;
+.card-socials-btn {
+  width: 25px;
+  height: 25px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
 }
 
+.card-socials-btn svg {
+  width: 100%;
+  height: 100%;
+  fill: var(--main-color);
+}
+
+.card-new:hover > .card-socials {
+  opacity: 1;
+  height: 35px;
+}
+
+.card-socials-btn:hover {
+  transform: translateY(-5px);
+  transition: all 0.15s;
+}
+
+.card-photo:hover {
+  transition: 0.3s;
+  /*transform: scale(0.4) translate(160px, 150px);*/
+}
   </style>
 </head>
 <body class="page-top">
@@ -80,14 +110,15 @@
                     <div class="row no-gutters align-items-center">
                       <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                          Data Matrix Penilaian ppk 
+                          Data Matrix Sls 
                         </div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                          MENU TAMBAH DATA PENILAI 
+                          MENU TAMBAH DATA PENILAI SLS
                         </div>
                       </div>
                       <div class="col-auto">
                         <img style="width: 100px; height: 60px;" src="<?php echo base_url('assets/img/addMatriks.svg')?>">
+                        <!-- <i class="fas fa-calendar-check fa-3x " style="color: #74C0FC;"></i> -->
                       </div>
                     </div>
                   </div>
@@ -112,76 +143,65 @@
         <div class="penilai-set" data-set="1">
     <div class="row">
  <!--          <button class="removePenilai btn btn-danger"> - </button> -->
-      <div class="col-lg-3">
-        <div class="card-client">
-          <div class="user-picture">
-            <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
-              <path d="M224 256c70.7 0 128-57.31 128-128s-57.3-128-128-128C153.3 0 96 57.31 96 128S153.3 256 224 256zM274.7 304H173.3C77.61 304 0 381.6 0 477.3c0 19.14 15.52 34.67 34.66 34.67h378.7C432.5 512 448 496.5 448 477.3C448 381.6 370.4 304 274.7 304z"></path>
-            </svg>
-          </div>
-          <label>Nama Dinilai :</label>
-          <p class="name-client">
-       <select id="Dinilai_1" class="form-control select2" name="dinilai1">
-         <option value="">Pilih Karyawan</option>
+<div class="col-lg-3">
+<div class="card-new">
+    <div class="card-photo"></div>
+    <div class="card-title"><p style="color: #111; margin-bottom: 5px; margin-top: 20px; font-size: 15px;">Nama Dinilai</p>
+      <select id="Dinilai_1" class="form-control select2" name="dinilai1">
+         <option value="">Pilih Karyawan </option>
          <?php foreach ($nilai as $k) { ?>
          <option value="<?=$k['nip_btn'] .'|'. $k['name'] ?>"><?= $k['name']; ?></option>
          <?php } ?>
-       </select>
-             <span id="getdeep_1"></span> 
-          </p>
-        </div>
-      </div>
-      <div class="col-lg-3">
-        <div class="card-client">
-          <div class="user-picture">
-            <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
-              <path d="M224 256c70.7 0 128-57.31 128-128s-57.3-128-128-128C153.3 0 96 57.31 96 128S153.3 256 224 256zM274.7 304H173.3C77.61 304 0 381.6 0 477.3c0 19.14 15.52 34.67 34.66 34.67h378.7C432.5 512 448 496.5 448 477.3C448 381.6 370.4 304 274.7 304z"></path>
-            </svg>
-          </div>
-          <label>Nama Penilai 1 :</label>
-          <p class="name-client">
-        <select id="penilai1_1" class="form-control select2" name="p1">
+       </select> <br>
+        <span id="getdeep_1"></span>
+    </div>
+    <div class="card-sosials">
+      
+    </div>
+</div>
+</div>
+<div class="col-lg-3">
+<div class="card-new">
+    <div class="card-photo"></div>
+    <div class="card-title"><p style="color: #111; margin-bottom: 5px; margin-top: 20px; font-size: 15px;">Nama Penilai 1 :</p>
+       <select id="penilai1_1" class="form-control select2" name="p1">
          <option value="">Pilih Karyawan</option>
-         
-       </select>
-            <span id="dept_penilai1_1"></span>
-          </p>
-        </div>
-      </div>
-      <div class="col-lg-3">
-        <div class="card-client">
-          <div class="user-picture">
-            <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
-              <path d="M224 256c70.7 0 128-57.31 128-128s-57.3-128-128-128C153.3 0 96 57.31 96 128S153.3 256 224 256zM274.7 304H173.3C77.61 304 0 381.6 0 477.3c0 19.14 15.52 34.67 34.66 34.67h378.7C432.5 512 448 496.5 448 477.3C448 381.6 370.4 304 274.7 304z"></path>
-            </svg>
-          </div>
-          <label>Nama Penilai 2 :</label>
-          <p class="name-client">
-       <select id="penilai2_1" class="form-control select2" name="p2">
+       </select><br>
+        <span id="dept_penilai1_1"></span>
+    </div>
+    <div class="card-sosials">  
+      
+    </div>
+</div>
+</div>
+<div class="col-lg-3">
+<div class="card-new">
+    <div class="card-photo"></div>
+    <div class="card-title"><p style="color: #111; margin-bottom: 5px; margin-top: 20px; font-size: 15px;">Nama Penilai 2 :</p>
+        <select id="penilai2_1" class="form-control select2" name="p2">
          <option value="">Pilih Karyawan</option>
-         
-       </select>
-            <span id="dept_penilai2_1"></span>
-          </p>
-        </div>
-      </div>
-      <div class="col-lg-3">
-        <div class="card-client">
-          <div class="user-picture">
-            <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
-              <path d="M224 256c70.7 0 128-57.31 128-128s-57.3-128-128-128C153.3 0 96 57.31 96 128S153.3 256 224 256zM274.7 304H173.3C77.61 304 0 381.6 0 477.3c0 19.14 15.52 34.67 34.66 34.67h378.7C432.5 512 448 496.5 448 477.3C448 381.6 370.4 304 274.7 304z"></path>
-            </svg>
-          </div>
-          <label>Nama Penilai 3 :</label>
-          <p class="name-client">
-        <select id="penilai3_1" class="form-control select2" name="p3">
+       </select><br>
+        <span id="dept_penilai2_1"></span>
+    </div>
+    <div class="card-sosials">
+      
+    </div>
+</div>
+</div>
+<div class="col-lg-3">
+<div class="card-new">
+    <div class="card-photo"></div>
+    <div class="card-title"><p style="color: #111; margin-bottom: 5px; margin-top: 20px; font-size: 15px;">Nama Penilai 3 :</p>
+      <select id="penilai3_1" class="form-control select2" name="p3">
          <option value="">Pilih Karyawan</option>
-         
-       </select>
-            <span id="dept_penilai3_1"></span>
-          </p>
+       </select><br>
+        <span id="dept_penilai3_1"></span>
+        <div class="card-sosials">
+          
         </div>
-      </div>
+    </div>
+</div>
+</div>
     </div>
     </div>
     </div>
@@ -204,7 +224,7 @@
 
         console.log('cek :', nik); 
         $.ajax({
-          url: '<?= site_url("C_matrix_penilaian/getDepartemen"); ?>',
+          url: '<?= site_url("C_matrix_penilaian_sls/getDepartemen"); ?>',
           type: 'POST',
           data: { nik_dinilai: nik },
           dataType: 'json',
@@ -212,11 +232,10 @@
             if (data.departemen.length > 0) {
               var departemen = data.departemen[0].departemen;
               $('#getdeep_1').text(departemen); 
-              console.log('departemen :' ,departemen); 
-
+              console.log('departemen : ', departemen); 
               // Panggil AJAX kedua untuk mendapatkan daftar karyawan
               $.ajax({
-                url: '<?= site_url("C_matrix_penilaian/dptKaryawan"); ?>',
+                url: '<?= site_url("C_matrix_penilaian_sls/dptKaryawan"); ?>',
                 type: 'POST',
                 data: { departemen: departemen }, 
                 dataType: 'json',
@@ -258,7 +277,7 @@
 
        
         $.ajax({
-          url : '<?= site_url('C_matrix_penilaian/getDepartemen');  ?>', 
+          url : '<?= site_url('C_matrix_penilaian_sls/getDepartemen');  ?>', 
           type : 'POST', 
           data : {nik_dinilai : nikP}, 
           dataType : 'json', 
@@ -312,72 +331,64 @@ $(document).ready(function () {
         <div class="card-body">
           <div class="row">
             <div class="col-lg-3">
-              <div class="card-client">
-              <div class="user-picture">
-               <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
-                <path d="M224 256c70.7 0 128-57.31 128-128s-57.3-128-128-128C153.3 0 96 57.31 96 128S153.3 256 224 256zM274.7 304H173.3C77.61 304 0 381.6 0 477.3c0 19.14 15.52 34.67 34.66 34.67h378.7C432.5 512 448 496.5 448 477.3C448 381.6 370.4 304 274.7 304z"></path>
-                </svg>
-                </div>
-                <label>Nama Dinilai:</label>
-                <p class="name-client">
-                  <select id="Dinilai_${count}" class="form-control select2 dinilai" name="dinilai${count}">
-                    <option value="">Pilih Karyawan</option>
-                    <?php foreach ($nilai as $k) { ?>
-                      <option value="<?= $k['nip_btn'] . '|' . $k['name'] ?>"><?= $k['name'] ?></option>
-                    <?php } ?>
-                  </select>
-                  <span id="getdeep_${count}"></span>
-                </p>
-              </div>
-            </div>
-            <div class="col-lg-3">
-              <div class="card-client">
-              <div class="user-picture">
-            <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
-              <path d="M224 256c70.7 0 128-57.31 128-128s-57.3-128-128-128C153.3 0 96 57.31 96 128S153.3 256 224 256zM274.7 304H173.3C77.61 304 0 381.6 0 477.3c0 19.14 15.52 34.67 34.66 34.67h378.7C432.5 512 448 496.5 448 477.3C448 381.6 370.4 304 274.7 304z"></path>
-              </svg>
-               </div>
-                <label>Nama Penilai 1:</label>
-                <p class="name-client">
-                  <select id="penilai1_${count}" class="form-control select2 penilai" name="p1_${count}">
-                    <option value="">Pilih Karyawan</option>
-                  </select>
-                  <span id="dept_penilai1_${count}"></span>
-                </p>
-              </div>
-            </div>
-            <div class="col-lg-3">
-              <div class="card-client">
-              <div class="user-picture">
-            <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
-              <path d="M224 256c70.7 0 128-57.31 128-128s-57.3-128-128-128C153.3 0 96 57.31 96 128S153.3 256 224 256zM274.7 304H173.3C77.61 304 0 381.6 0 477.3c0 19.14 15.52 34.67 34.66 34.67h378.7C432.5 512 448 496.5 448 477.3C448 381.6 370.4 304 274.7 304z"></path>
-              </svg>
-                </div>
-                <label>Nama Penilai 2:</label>
-                <p class="name-client">
-                  <select id="penilai2_${count}" class="form-control select2 penilai" name="p2_${count}">
-                    <option value="">Pilih Karyawan</option>
-                  </select>
-                  <span id="dept_penilai2_${count}"></span>
-                </p>
-              </div>
-            </div>
-            <div class="col-lg-3">
-              <div class="card-client">
-              <div class="user-picture">
-            <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
-              <path d="M224 256c70.7 0 128-57.31 128-128s-57.3-128-128-128C153.3 0 96 57.31 96 128S153.3 256 224 256zM274.7 304H173.3C77.61 304 0 381.6 0 477.3c0 19.14 15.52 34.67 34.66 34.67h378.7C432.5 512 448 496.5 448 477.3C448 381.6 370.4 304 274.7 304z"></path>
-               </svg>
-               </div>
-                <label>Nama Penilai 3:</label>
-                <p class="name-client">
-                  <select id="penilai3_${count}" class="form-control select2 penilai" name="p3_${count}">
-                    <option value="">Pilih Karyawan</option>
-                  </select>
-                  <span id="dept_penilai3_${count}"></span>
-                </p>
-              </div>
-            </div>
+<div class="card-new">
+    <div class="card-photo"></div>
+    <div class="card-title"><p style="color: #111; margin-bottom: 5px; margin-top: 20px; font-size: 15px;">Nama Dinilai</p>
+      <select id="Dinilai_${count}" class="form-control select2 dinilai" name="dinilai${count}">
+         <option value="">Pilih Karyawan</option>
+         <?php foreach ($nilai as $k) { ?>
+         <option value="<?=$k['nip_btn'] .'|'. $k['name'] ?>"><?= $k['name']; ?></option>
+         <?php } ?>
+       </select> <br>
+        <span id="getdeep_${count}"></span>
+    </div>
+    <div class="card-sosials">
+      
+    </div>
+</div>
+</div>
+<div class="col-lg-3">
+<div class="card-new">
+    <div class="card-photo"></div>
+    <div class="card-title"><p style="color: #111; margin-bottom: 5px; margin-top: 20px; font-size: 15px;">Nama Penilai 1 :</p>
+       <select id="penilai1_${count}" class="form-control select2 penilai" name="p1_${count}">
+         <option value="">Pilih Karyawan</option>
+       </select><br>
+        <span id="dept_penilai1_${count}"></span>
+    </div>
+    <div class="card-sosials">
+      
+    </div>
+</div>
+</div>
+<div class="col-lg-3">
+<div class="card-new">
+    <div class="card-photo"></div>
+    <div class="card-title"><p style="color: #111; margin-bottom: 5px; margin-top: 20px; font-size: 15px;">Nama Penilai 2 :</p>
+        <select id="penilai2_${count}" class="form-control select2 penilai" name="p2_${count}">
+         <option value="">Pilih Karyawan</option>
+       </select><br>
+        <span id="dept_penilai2_${count}"></span>
+    </div>
+    <div class="card-sosials">
+      
+    </div>
+</div>
+</div>
+<div class="col-lg-3">
+<div class="card-new">
+    <div class="card-photo"></div>
+    <div class="card-title"><p style="color: #111; margin-bottom: 5px; margin-top: 20px; font-size: 15px;">Nama Penilai 3 :</p>
+      <select id="penilai3_${count}" class="form-control select2 penilai" name="p3_${count}">
+         <option value="">Pilih Karyawan</option>
+       </select><br>
+        <span id="dept_penilai3_${count}"></span>
+        <div class="card-sosials">
+          
+        </div>
+    </div>
+</div>
+</div>
           </div>
         </div>
       
@@ -403,7 +414,7 @@ $(document).ready(function () {
 
       //  AJAX untuk mendapatkan Departemen
       $.ajax({
-        url: '<?= site_url("C_matrix_penilaian/getDepartemen"); ?>',
+        url: '<?= site_url("C_matrix_penilaian_sls/getDepartemen"); ?>',
         type: 'POST',
         data: { nik_dinilai: nik },
         dataType: 'json',
@@ -413,7 +424,7 @@ $(document).ready(function () {
 
             //  AJAX untuk mendapatkan Karyawan berdasarkan Departemen
             $.ajax({
-              url: '<?= site_url("C_matrix_penilaian/dptKaryawan"); ?>',
+              url: '<?= site_url("C_matrix_penilaian_sls/dptKaryawan"); ?>',
               type: 'POST',
               data: { departemen: data.departemen[0].departemen },
               dataType: 'json',
@@ -455,7 +466,7 @@ $(document).ready(function () {
         console.log('Cek NIK Penilai: ', nikD);
 
         $.ajax({
-          url : '<?= site_url("C_matrix_penilaian/getDepartemen"); ?>', 
+          url : '<?= site_url("C_matrix_penilaian_sls/getDepartemen"); ?>', 
           type : 'POST', 
           data : { nik_dinilai : nikD }, 
           dataType : 'json', 
@@ -531,7 +542,7 @@ console.log(setId);
 
   // Kirim data ke controller dengan AJAX
   $.ajax({
-    url: '<?= site_url("C_matrix_penilaian/simpanSave"); ?>',
+    url: '<?= site_url("C_matrix_penilaian_sls/simpanSave"); ?>',
     type: 'POST',
     data: { penilaiData: JSON.stringify(penilaiData) }, // Kirim sebagai JSON
     dataType: 'json',
@@ -545,18 +556,13 @@ console.log(setId);
         }); 
         console.log("data :", penilaiData);
         //location.reload(); // Refresh halaman setelah menyimpan (opsional)
-        window.location.href = "<?= site_url('C_matrix_penilaian'); ?>";
+        window.location.href = "<?= site_url('C_matrix_penilaian_sls'); ?>";
       } else {
         alert('Gagal menyimpan data.');
       }
     },
     error: function () {
-      // alert('Terjadi kesalahan saat menyimpan data.');
-       Swal.fire({
-        title : "Gagal!", 
-        text  : "Maaf terjadi kesalahan saat menyimpan data", 
-        icon  : "error"
-      }); 
+      alert('Terjadi kesalahan saat menyimpan data.');
     }
   });
 }

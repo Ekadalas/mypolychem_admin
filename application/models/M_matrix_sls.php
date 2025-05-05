@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class M_matrix extends CI_Model
+class M_matrix_sls extends CI_Model
 {
 
 	public function dataMatrix()
@@ -22,7 +22,7 @@ class M_matrix extends CI_Model
     $office = 'KRW';
   }
 
-	$data_matrix = $this->db->query("SELECT a.id, a.periode_ppk ,a.nik_dinilai, a.nama_dinilai, b.departemen , b.unit_kerja, a.nama_p1, a.nama_p2, a.nama_p3 FROM data_matrix_ppk a LEFT JOIN data_karyawan b ON a.nik_dinilai = b.nip_btn WHERE a.office = '$office' ORDER BY a.nama_dinilai ASC;");
+	$data_matrix = $this->db->query("SELECT a.id, a.periode_ppk ,a.nik_dinilai, a.nama_dinilai, b.departemen , b.unit_kerja, a.nama_p1, a.nama_p2, a.nama_p3 FROM data_matrix_sls a LEFT JOIN data_karyawan b ON a.nik_dinilai = b.nip_btn WHERE a.office = '$office' ORDER BY a.nama_dinilai ASC;");
 
 	return $data_matrix->result_array();
 	}
@@ -31,22 +31,9 @@ class M_matrix extends CI_Model
   public function data_matriks($ktr) {
 
 
-    $sql = $this->db->query("SELECT *, b.cd_grade FROM data_matrix_ppk a LEFT JOIN data_karyawan b ON a.nik_dinilai = b.nip_btn WHERE office = '$ktr' GROUP BY nik_dinilai ORDER BY nama_dinilai ASC"); 
+    $sql = $this->db->query("SELECT *, b.cd_grade FROM data_matrix_sls a LEFT JOIN data_karyawan b ON a.nik_dinilai = b.nip_btn WHERE office = '$ktr' GROUP BY nik_dinilai ORDER BY nama_dinilai ASC"); 
     return $sql->result_array(); 
   }
-
-  // public function penilai($nik) {
-
-  //   // Jika $nik adalah array, ubah jadi format string untuk IN (...)
-  //   if (is_array($nik)) {
-  //     $nik_string = "'" . implode("','", $nik) . "'"; // hasil: '1234','5678','9012'
-  //   } else {
-  //     $nik_string = "'$nik'"; // fallback kalau bukan array
-  //   }
-
-  //   $query = $this->db->query("SELECT id, nik_dinilai, nama_dinilai, nik_p1, nama_p1, nik_p2, nama_p2, nik_p3, nama_p3 FROM data_matrix_ppk WHERE nik_dinilai IN ($nik_string)"); 
-  //   return $query->result_array(); 
-  // }
 
   public function penilai($nik) {
 
@@ -57,7 +44,7 @@ class M_matrix extends CI_Model
 			$nik_string = "'$nik'"; // fallback kalau bukan array
 		}
 
-		$query = $this->db->query("SELECT id, departemen, nik_dinilai, nama_dinilai, nik_p1, nama_p1, nik_p2, nama_p2, nik_p3, nama_p3 FROM data_matrix_ppk WHERE id IN ($nik_string)"); 
+		$query = $this->db->query("SELECT id, nik_dinilai, nama_dinilai, nik_p1, nama_p1, nik_p2, nama_p2, nik_p3, nama_p3 FROM data_matrix_sls WHERE id IN ($nik_string)"); 
 		return $query->result_array(); 
 	}
 
@@ -65,13 +52,13 @@ class M_matrix extends CI_Model
   public function data_all() {
     $nik_sesi = $this->session->userdata('nip_btn');
 
-		if ($nik_sesi == '000') {
+		if ($nik_sesi == '00') {
 			$where_office = '000';
-		}elseif ($nik_sesi == '001') {
+		}elseif ($nik_sesi == '01') {
 			$where_office = '001';
-		}elseif ($nik_sesi == '002') {
+		}elseif ($nik_sesi == '02') {
 			$where_office = '002';
-		}elseif ($nik_sesi == '003') {
+		}elseif ($nik_sesi == '03') {
 			$where_office = '003';
 		}
     $query = $this->db->query("SELECT name, nip_btn FROM data_karyawan WHERE cd_office = '$where_office'  ORDER BY name ASC  ");
@@ -142,7 +129,7 @@ class M_matrix extends CI_Model
       $pembaruan = $this->db->escape($row['pembaharuan']);
       
       // Query update lengkap
-      $sql = "UPDATE data_matrix_ppk 
+      $sql = "UPDATE data_matrix_sls
           SET nik_p1 = $p1,
             nama_p1 = $nama_p1,
             kode_organisasi_p1 = $org_p1,
@@ -165,7 +152,7 @@ class M_matrix extends CI_Model
     
    public function organisasi() {
 
-    $org = $this->db->query("SELECT organisasi_ppk FROM data_matrix_ppk GROUP BY organisasi_ppk;"); 
+    $org = $this->db->query("SELECT organisasi_ppk FROM data_matrix_sls GROUP BY organisasi_ppk;"); 
     $HasOrg = $org->result_array(); 
    }
 

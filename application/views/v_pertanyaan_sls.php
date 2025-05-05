@@ -97,7 +97,7 @@
   <div class="col-md-12">
     <div class="card shadow">
          <div class="card border-left-info shadow py-3" style="min-height: auto;">
-      <div class="card-body">
+      <div class="card-body" >
 <form action="<?php echo site_url('C_pertanyaan_sls/ambilSoal'); ?>" method="post" id="formPertanyaan">
     <div class="card-body">
         <div class="row align-items-end mb-3">

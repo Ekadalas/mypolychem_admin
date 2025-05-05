@@ -160,6 +160,8 @@
               <option value="">Pilih Karyawan</option>
               <option value="<?= $p['id']; ?>" selected><?= $p['nama_dinilai']; ?></option>
           </select> 
+          <div class="mt-1 text-white fw-bold"><?= $p['departemen']; ?></div>
+
             <span id="getdeep_dinilai_<?= $index ?>"></span>
             <input type="hidden" name="dinilai1[]" value="<?= $p['id']; ?>">
 
@@ -185,6 +187,8 @@
           </option>
           <?php endforeach; ?>
           </select> 
+          <div class="mt-1 text-white fw-bold"><?= $p['departemen']; ?></div>
+
             <span id="getdeep_dinilai_<?= $index ?>"></span>
             
           </p>
@@ -209,6 +213,8 @@
                 </option>
             <?php endforeach; ?>
         </select>
+        <div class="mt-1 text-white fw-bold"><?= $p['departemen']; ?></div>
+
             <span id="getdeep_penilai_<?= $index ?>"></span>
           </p>
         </div>
@@ -232,6 +238,8 @@
                 </option>
             <?php endforeach; ?>
         </select>
+        <div class="mt-1 text-white fw-bold"><?= $p['departemen']; ?></div>
+
             <span id="getdeep_penilai_<?= $index ?>"></span>
           </p>
         </div>

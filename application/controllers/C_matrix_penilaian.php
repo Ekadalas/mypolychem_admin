@@ -25,25 +25,18 @@ class C_matrix_penilaian extends CI_Controller
 
   if ($nik_sesi == '00') {
     $as_nik = '000';
-    $as_of  = 'HO'; 
   } elseif ($nik_sesi == '01') {
-    $as_nik = 'MRK';
+    $as_nik = '001';
   } elseif ($nik_sesi == '02') {
-    $as_nik = 'TGR';
+    $as_nik = '002'; 
   } elseif ($nik_sesi == '03') {
-    $as_nik = 'KRW';
+    $as_nik = '003'; 
   } else {
     $as_nik = 'UNKNOW';
   }
 
-  // $sql = "SELECT nip_btn , name 
-  // 		  FROM data_karyawan a 
-  		 
-  // 		  WHERE cd_office = ? 
-  // 		  AND level = 'user'
-  // 		  GROUP by nip_btn 
-  // 		  ORDER BY name ASC";
-  // $query = $this->db->query($sql, array($as_nik));
+ 
+
   $hashas = $this->db->query("SELECT departemen, nip_btn , name 
   		  FROM data_karyawan 
   		  WHERE cd_office = '$as_nik'
@@ -51,6 +44,8 @@ class C_matrix_penilaian extends CI_Controller
   		  GROUP by nip_btn 
   		  ORDER BY name ASC;"); 
     $data['nilai'] = $hashas->result_array();
+
+   // var_dump($data['nilai']); 
 
   $this->load->view('v_new_penilaian', $data);
 
@@ -61,7 +56,7 @@ class C_matrix_penilaian extends CI_Controller
 
      $nik = $this->input->post('nik_dinilai');
 
-      $res = "SELECT departemen, nip_btn , unit_kerja
+      $res = "SELECT departemen
           FROM data_karyawan
           WHERE nip_btn = ?"; 
       $get_res = $this->db->query($res, array($nik)); 

@@ -25,13 +25,12 @@ class C_matrix_penilaian_sls extends CI_Controller
 
   if ($nik_sesi == '00') {
     $as_nik = '000';
-    $as_of  = 'HO'; 
   } elseif ($nik_sesi == '01') {
-    $as_nik = 'MRK';
+    $as_nik = '001';
   } elseif ($nik_sesi == '02') {
-    $as_nik = 'TGR';
+    $as_nik = '002';
   } elseif ($nik_sesi == '03') {
-    $as_nik = 'KRW';
+    $as_nik = '003';
   } else {
     $as_nik = 'UNKNOW';
   }
