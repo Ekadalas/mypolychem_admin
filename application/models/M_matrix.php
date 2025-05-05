@@ -57,7 +57,7 @@ class M_matrix extends CI_Model
 			$nik_string = "'$nik'"; // fallback kalau bukan array
 		}
 
-		$query = $this->db->query("SELECT id, nik_dinilai, nama_dinilai, nik_p1, nama_p1, nik_p2, nama_p2, nik_p3, nama_p3 FROM data_matrix_ppk WHERE id IN ($nik_string)"); 
+		$query = $this->db->query("SELECT id, departemen, nik_dinilai, nama_dinilai, nik_p1, nama_p1, nik_p2, nama_p2, nik_p3, nama_p3 FROM data_matrix_ppk WHERE id IN ($nik_string)"); 
 		return $query->result_array(); 
 	}
 
