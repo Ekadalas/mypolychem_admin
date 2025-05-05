@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<?php $this->load->view('cover/header'); ?>
+  <?php $this->load->view('cover/header'); ?>
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
   <style>
     
@@ -63,17 +63,17 @@
   </style>
 </head>
 <body class="page-top">
-	<div id="wrapper">
-		<?php $this->load->view('cover/sidebar'); ?>
+  <div id="wrapper">
+    <?php $this->load->view('cover/sidebar'); ?>
 
-		 <!-- Content Wrapper -->
+     <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 
             <!-- Main Content -->
             <div id="content">
-            	<?php $this->load->view('cover/topbar'); ?>
+              <?php $this->load->view('cover/topbar'); ?>
                <div class="contente">
-               <div class="container-fluid">	
+               <div class="container-fluid">  
 
                 <div class="col-xl-12 col-md-12 mb-5">
                 <div class="card border-left-info shadow py-3" style="min-height: auto;">
@@ -95,7 +95,7 @@
                   </div>
                 </div>
               </div>
-               	
+                
                 <button class="btn btn-info  mb-3" onclick="history.back()">
                   <span class="icon text-white-50">
                      <i class="fas fa-arrow-left"></i>
@@ -126,10 +126,10 @@
        <select id="Dinilai_1" class="form-control select2" name="dinilai1">
          <option value="">Pilih Karyawan</option>
          <?php foreach ($nilai as $k) { ?>
-         <option value="<?=$k['nik_dinilai'] .'|'. $k['nama_dinilai'] ?>"><?= $k['nama_dinilai']; ?></option>
+         <option value="<?=$k['nip_btn'] .'|'. $k['name'] ?>"><?= $k['name']; ?></option>
          <?php } ?>
        </select>
-            <span id="getdeep_1"></span>
+             <span id="getdeep_1"></span> 
           </p>
         </div>
       </div>
@@ -189,11 +189,11 @@
     </div>
                 </div>
               </div>
-            </div>    	
-          </div>     	
+            </div>      
+          </div>      
         </div>
-      </div>         	
-	</div>
+      </div>          
+  </div>
   <script>
   $(document).ready(function() {
     $('#Dinilai_1').on('change', function() {
@@ -204,7 +204,7 @@
         var nama = spliData[1]; 
         var nik = spliData[0]; 
 
-      //  console.log('cek :', nama); 
+        console.log('cek :', nik); 
         $.ajax({
           url: '<?= site_url("C_matrix_penilaian/getDepartemen"); ?>',
           type: 'POST',
@@ -215,6 +215,7 @@
               var departemen = data.departemen[0].departemen;
               $('#getdeep_1').text(departemen); 
               console.log('departemen :' ,departemen); 
+
               // Panggil AJAX kedua untuk mendapatkan daftar karyawan
               $.ajax({
                 url: '<?= site_url("C_matrix_penilaian/dptKaryawan"); ?>',
@@ -226,7 +227,7 @@
 
                   if (response.namaDin.length > 0) {
                     $.each(response.namaDin, function(index, item) {
-                      $('#penilai1_1, #penilai2_1, #penilai3_1').append('<option value="' + item.nik_dinilai + '|' + item.nama_dinilai + '">' + item.nama_dinilai + '</option>');
+                      $('#penilai1_1, #penilai2_1, #penilai3_1').append('<option value="' + item.nip_btn + '|' + item.name + '">' + item.name + '</option>');
                     });
                   }
                   $('#penilai1_1, #penilai2_1, penilai3_1').select2(); 
@@ -308,7 +309,7 @@ $(document).ready(function () {
     var newSet = `
     <hr class="garis">
     <div class="penilai-set" data-set="${count}">
-      <button class="removePenilai btn btn-danger"><i class="fas fa-minus"></i> </button>
+      <button class="removePenilai btn btn-danger"><i class="fas fa-minus"></i></button><br><br>
       
         <div class="card-body">
           <div class="row">
@@ -324,7 +325,7 @@ $(document).ready(function () {
                   <select id="Dinilai_${count}" class="form-control select2 dinilai" name="dinilai${count}">
                     <option value="">Pilih Karyawan</option>
                     <?php foreach ($nilai as $k) { ?>
-                      <option value="<?= $k['nik_dinilai'] . '|' . $k['nama_dinilai'] ?>"><?= $k['nama_dinilai'] ?></option>
+                      <option value="<?= $k['nip_btn'] . '|' . $k['name'] ?>"><?= $k['name'] ?></option>
                     <?php } ?>
                   </select>
                   <span id="getdeep_${count}"></span>
@@ -426,7 +427,7 @@ $(document).ready(function () {
                 if (response.namaDin.length > 0) {
                   $.each(response.namaDin, function (index, item) {
                     $('#penilai1_' + setId + ', #penilai2_' + setId + ', #penilai3_' + setId).append(
-                      '<option value="' + item.nik_dinilai + '|' + item.nama_dinilai + '">' + item.nama_dinilai + '</option>'
+                      '<option value="' + item.nip_btn + '|' + item.name + '">' + item.name + '</option>'
                     );
                   });
                 }

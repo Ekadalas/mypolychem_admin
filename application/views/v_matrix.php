@@ -101,7 +101,7 @@
                 <th>NIK</th>
                 <th>NAMA</th>
                 <th>DEPARTEMEN</th>
-                <th>ORGANISASI</th>
+                <th>UNIT KERJA</th>
                 <th>P1</th>
                 <th>P2</th>
                 <th>P3</th>
@@ -117,7 +117,7 @@
                                   $nik_dinilai  = $k['nik_dinilai'];
                                   $nama_dinilai = $k['nama_dinilai'];
                                   $departemen   = $k['departemen'];
-																	$organisasi   = $k['organisasi_ppk'];
+																	$unit         = $k['unit_kerja'];
 																	$p1           = $k['nama_p1'];
 																	$p2           = $k['nama_p2'];
 																	$p3           = $k['nama_p3'];
@@ -133,7 +133,7 @@
                                 <td><?php echo $nik_dinilai  ?></td>
                                 <td><?php echo $nama_dinilai  ?></td>
                                 <td><?php echo $departemen ?></td>
-                                <td><?php echo $organisasi?></td>
+                                <td><?php echo $unit?></td>
                                 <td><?php echo $p1 ?></td>
                                 <td><?php echo $p2 ?></td>
                                 <td><?php echo $p3 ?></td>
@@ -198,6 +198,8 @@
                 title: "Info!",
                 text: "Silakan pilih minimal 1 NIK",
                 icon: "info",
+            }).then(() => {
+               wadahNik(); 
             });
             return;
         }
@@ -209,7 +211,7 @@
     });
 });
       
-				</script>
+</script>
  <script>
   $(document).ready(function() {
     $('#apusDelet').on('click', function(e) {
@@ -255,6 +257,8 @@
                 Swal.fire('Gagal!', 'Terjadi kesalahan saat menghapus data.', 'error');
               }
             });
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            wadahNik(); 
           }
         });
       }
@@ -263,8 +267,9 @@
 </script>
 <script >
   function wadahNik() {
-    $('#dataTable').DataTable().search('').draw(); 
-    $('#dataTable').DataTable().page.len(-1).draw();
+    let.table = $('#dataTable').DataTable(); 
+    table.search('').draw(); 
+    table.page.len(-1).draw();
   }
 </script>
 
