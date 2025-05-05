@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class C_matrix_penilaian extends CI_Controller
+class C_matrix_penilaian_sls extends CI_Controller
 {
 
 // ini data matrix ppk
@@ -9,13 +9,13 @@ class C_matrix_penilaian extends CI_Controller
 		parent::__construct();
 		$this->load->helper('url');
 		$this->load->library('session');
-		$this->load->model('M_matrix');
+		$this->load->model('M_matrix_sls');
 	}
 
 	public function index() {
 
-		$data['matrix'] = $this->M_matrix->dataMatrix();
-		$this->load->view('v_matrix', $data);
+		$data['matrix'] = $this->M_matrix_sls->dataMatrix();
+		$this->load->view('v_matrix_sls', $data);
 	}
 
  public function tambah() {
@@ -28,14 +28,12 @@ class C_matrix_penilaian extends CI_Controller
   } elseif ($nik_sesi == '01') {
     $as_nik = '001';
   } elseif ($nik_sesi == '02') {
-    $as_nik = '002'; 
+    $as_nik = '002';
   } elseif ($nik_sesi == '03') {
-    $as_nik = '003'; 
+    $as_nik = '003';
   } else {
     $as_nik = 'UNKNOW';
   }
-
- 
 
   $hashas = $this->db->query("SELECT departemen, nip_btn , name 
   		  FROM data_karyawan 
@@ -45,9 +43,7 @@ class C_matrix_penilaian extends CI_Controller
   		  ORDER BY name ASC;"); 
     $data['nilai'] = $hashas->result_array();
 
-   // var_dump($data['nilai']); 
-
-  $this->load->view('v_new_penilaian', $data);
+  $this->load->view('v_new_sls', $data);
 
 }
 
@@ -56,11 +52,12 @@ class C_matrix_penilaian extends CI_Controller
 
      $nik = $this->input->post('nik_dinilai');
 
-      $res = "SELECT departemen
+      $res = "SELECT departemen, nip_btn , unit_kerja
           FROM data_karyawan
           WHERE nip_btn = ?"; 
       $get_res = $this->db->query($res, array($nik)); 
       $data['departemen'] = $get_res->result_array();           
+
 
       echo json_encode($data);
 
@@ -128,7 +125,7 @@ class C_matrix_penilaian extends CI_Controller
     $rows = $this->db
         ->select('nik_dinilai, periode_ppk, office, departemen, kode_organisasi, organisasi_ppk, posisi')
         ->where_in('nik_dinilai', $allNiks)
-        ->get('data_matrix_ppk')
+        ->get('data_matrix_sls')
         ->result_array();
     // mapping by nik
     $mapMatrix = [];
@@ -138,7 +135,7 @@ class C_matrix_penilaian extends CI_Controller
 
     log_message('debug', '== MULAI simpanSave ==');
 
-    $urutWaktu = "SELECT periode_ppk FROM data_matrix_ppk ORDER BY pembaharuan DESC LIMIT 1;";
+    $urutWaktu = "SELECT periode_ppk FROM data_matrix_sls ORDER BY pembaharuan DESC LIMIT 1;";
     $filter    = $this->db->query($urutWaktu)->row_array();
 
     $batch = [];
@@ -203,7 +200,7 @@ class C_matrix_penilaian extends CI_Controller
     }
 
     $this->db->trans_start();
-      $this->db->insert_batch('data_matrix_ppk', $batch);
+      $this->db->insert_batch('data_matrix_sls', $batch);
     $this->db->trans_complete();
 
     if ($this->db->trans_status() === FALSE) {
@@ -234,7 +231,7 @@ $all_penilai_niks = array_unique(array_merge($p1s, $p2s, $p3s));
 
 // 2. Ambil kode_organisasi dan nama_dinilai dari DB
 $this->db->select('nik_dinilai, kode_organisasi, nama_dinilai');
-$this->db->from('data_matrix_ppk');
+$this->db->from('data_matrix_sls');
 $this->db->where_in('nik_dinilai', $all_penilai_niks);
 $query = $this->db->get();
 $result = $query->result_array();
@@ -279,12 +276,12 @@ foreach ($niks as $index => $nik) {
 		// var_dump($data);
 		// echo '</pre>';
 
-	$result = $this->M_matrix->update_multiple_matriks($data);
+	$result = $this->M_matrix_sls->update_multiple_matriks($data);
 
 	$this->session->set_flashdata('success', 'Data berhasil diperbarui!');
 
 
-	redirect('C_matrix_penilaian');
+	redirect('C_matrix_penilaian_sls');
 
 
 }
@@ -294,8 +291,8 @@ foreach ($niks as $index => $nik) {
 
 		if (!empty($id_apus)) {
 		$this->db->where_in('id', $id_apus);
-		$this->db->delete('data_matrix_ppk');
-
+		$this->db->delete('data_matrix_sls');
+            //var_dump($id_apus);
 		echo json_encode(['status' => 'sukses']);	
 		} else {
 
@@ -315,25 +312,23 @@ foreach ($niks as $index => $nik) {
 		$this->session->set_userdata('input_id', $nik);
 		
 		$office = $this->session->userdata('nip_btn');
-		if ($office == '000') {
+		if ($office == '00') {
 			$ktr = 'HO'; 
-		} elseif ($office == '001') {
+		} elseif ($office == '01') {
 			$ktr = 'MRK'; 
-		} elseif ($office == '002') {
+		} elseif ($office == '02') {
 			$ktr = 'TGR'; 
-		} elseif ($office == '003') {
+		} elseif ($office == '03') {
 			$ktr = 'KRW';
 		} else {
 			$ktr = 'UNKNOW'; 
 		}
 
-		$data['get_data_penilai'] = $this->M_matrix->penilai($nik);
-		$data['get_data_matriks'] = $this->M_matrix->data_matriks($ktr);
-		$data['get_data_karyawan'] = $this->M_matrix->data_all(); 
+		$data['get_data_penilai'] = $this->M_matrix_sls->penilai($nik);
+		$data['get_data_matriks'] = $this->M_matrix_sls->data_matriks($ktr);
+		$data['get_data_karyawan'] = $this->M_matrix_sls->data_all(); 
 		
-
-		
-		$this->load->view('v_edit_penilai', $data);
+		$this->load->view('v_ubah_sls', $data);
 		
 
 	}
