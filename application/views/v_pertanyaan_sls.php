@@ -98,10 +98,10 @@
     <div class="card shadow">
          <div class="card border-left-info shadow py-3" style="min-height: auto;">
       <div class="card-body" >
-<form action="<?php echo site_url('C_pertanyaan_sls/ambilSoal'); ?>" method="post" id="formPertanyaan">
+<!-- <form action="<?php echo site_url('C_pertanyaan_sls/ambilSoal'); ?>" method="post" id="formPertanyaan">
     <div class="card-body">
         <div class="row align-items-end mb-3">
-            <!-- Office Dropdown -->
+
             <div class="col-lg-6">
                 <label class="form-label">Pilih Grade</label>
                 <select class="form-control" name="grade" id="grade" required>
@@ -114,7 +114,7 @@
                 </select>
             </div>
 
-            <!-- Contoh Tambahan Input -->
+            
             <div class="col-lg-6">
             <label class="form-label">Pilih Tipe Pertanyaan</label>
                 <select class="form-control" id="type-pertanyaan-select" name="TypeHcSc" required>
@@ -129,15 +129,19 @@
 
         </div>
 
-        <!-- Tombol Submit -->
+
         <div class="row">
             <div class="col-lg-4">
                 <button type="submit" onclick="submitTanya()" class="btn btn-info px-5">Submit</button>
             </div>
         </div>
     </div>
-</form>
+</form> -->
 
+<div>DATA PERTANYAAN SLS MASIH DIPERSIAPKAN</div>
+<br>
+<div style='color:red;'>SILAHKAN HUBUNGI TIM TERKAIT UNTUK PENGEMBANGAN LEBIH LANJUT</div>
+<div style='color:green;'>TERIMA KASIH</div>
             <div class="tab-content">
                 <?php for ($i = 1; $i <= 5; $i++) : ?>
                     <div class="tab-pane <?= $i === 1 ? 'active' : '' ?>" id="step-<?= $i ?>">

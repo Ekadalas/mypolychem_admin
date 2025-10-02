@@ -33,11 +33,11 @@ class M_monitoring_penilaian extends CI_model
                                     COUNT(DISTINCT stg.nip_penilai) as progress_penilaian,
                                     stg.tanggal_input
                                     FROM data_matrix_ppk as dk
-                                    LEFT JOIN  stg_penilaian_ppk as stg ON  dk.nik_dinilai =  stg.nik_dinilai
+                                    LEFT JOIN  stg_penilaian_ppk as stg ON  dk.nik_dinilai =  stg.nik_dinilai 
                                     WHERE dk.office = '$office'
                                     GROUP BY dk.periode_ppk, stg.nik_dinilai, dk.nama_dinilai
                                     ORDER BY dk.nama_dinilai ASC");
-		return $data->result_array();
+		                                return $data->result_array();
 	}
 
   public function pilihDepart($nik_sesi) {

@@ -215,8 +215,8 @@
        <div class="col-lg-3">
        <div class="card-new">
     <div class="card-photo"></div>
-    <div class="card-title"><p style="color: #111; margin-bottom: 5px; margin-top: 20px; font-size: 15px;">Nama Penilai 3</p>
-         <select id="penilai_<?= $index ?>_p3" class="form-select select-karyawan" name="penilai3[]">
+    <div class="card-title"><p style="color: #111; margin-bottom: 5px; margin-top: 20px; font-size: 15px;">Penilai Rekan Kerja</p>
+         <!-- <select id="penilai_<?= $index ?>_p3" class="form-select select-karyawan" name="penilai3[]">
             <option value="">Pilih Karyawan</option>
             <?php foreach ($get_data_karyawan as $karyawan): ?>
                 <option value="<?= $karyawan['nip_btn'] ?>" 
@@ -225,7 +225,19 @@
                 </option>
             <?php endforeach; ?>
         </select>
-            <span id="getdeep_penilai_<?= $index ?>"></span>
+            <span id="getdeep_penilai_<?= $index ?>"></span> -->
+
+
+    <!-- PENILAI 3 REKAN KERJA PAKAI INPUT-->
+     <input 
+        type="text" 
+        class="form-control"
+        value="<?= $p['nama_p3'] ?> <?= $p['code_org_penilai'] ?? '' ?>" 
+        readonly
+      >
+      <input type="hidden" name="penilai3[]" value="<?= $p['nama_p3']; ?>">
+      <input type="hidden" name="code_org_penilai[]" value="<?= $p['code_org_penilai']; ?>">
+      
     </div>
     <div class="card-sosials">
       
