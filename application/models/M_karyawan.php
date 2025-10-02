@@ -18,9 +18,12 @@ class M_karyawan extends CI_Model
 			$where_office = '003';
 		}
 
-	$data_karyawan = $this->db->query("SELECT *
-	FROM data_karyawan
-	WHERE cd_office = '$where_office' AND cd_grade < '18'
+	$data_karyawan = $this->db->query("SELECT a.*, b.code_org
+	FROM data_karyawan a
+	JOIN tb_person_code_organisasi_sls b 
+    ON a.nip_btn COLLATE utf8mb4_general_ci = b.nik COLLATE utf8mb4_general_ci  
+	WHERE cd_office = '$where_office' 
+	-- AND cd_grade < '18'
 	ORDER BY name ASC");
 
 	return $data_karyawan->result_array();

@@ -14,12 +14,12 @@ class C_pertanyaan_sls extends CI_Controller
 	public function index() {
 
 		// Mendapatkan data dari metode getDataSelectGrade
-		$data['pilihData'] = $this->M_data_pertanyaan_sls->pilihGrade();
-		// Mendapatkan data dari metode getAllTypePer
-		$data['ambilSemua'] = $this->M_data_pertanyaan_sls->hardSoft();
+		// $data['pilihData'] = $this->M_data_pertanyaan_sls->pilihGrade();
+		// // Mendapatkan data dari metode getAllTypePer
+		// $data['ambilSemua'] = $this->M_data_pertanyaan_sls->hardSoft();
 		
 
-        $this->load->view('v_pertanyaan_sls', $data);
+        $this->load->view('v_pertanyaan_sls');
 
 	}
 

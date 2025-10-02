@@ -25,17 +25,18 @@ class M_monitoring_sls extends CI_model
 
 
 		// menggunakan query builder pada codeigniter
-		$data = $this->db->query("SELECT dk.periode_ppk, dk.nik_dinilai, dk.nama_dinilai, dk.office, dk.departemen, dk.kode_organisasi, dk.organisasi_ppk,
+		$data = $this->db->query("SELECT dk.periode_sls, dk.nik_dinilai, dk.nama_dinilai, dk.office, dk.departemen, dk.kode_organisasi, dk.organisasi_sls,
                                    (CASE WHEN dk.nik_p1 IS NOT NULL AND dk.nik_p1 != '' THEN 1 ELSE 0 END +
                                    CASE WHEN dk.nik_p2 IS NOT NULL AND dk.nik_p2 != '' THEN 1 ELSE 0 END +
-                                   CASE WHEN dk.nik_p3 IS NOT NULL AND dk.nik_p3 != '' THEN 1 ELSE 0 END
+                                   CASE WHEN drk.code_org_penilai IS NOT NULL AND drk.code_org_penilai != '' THEN 1 ELSE 0 END
                                     ) AS jumlah_penilai,
                                     COUNT(DISTINCT stg.nip_penilai) as progress_penilaian,
                                     stg.tanggal_input
                                     FROM data_matrix_sls as dk
-                                    LEFT JOIN  stg_penilaian_ppk as stg ON  dk.nik_dinilai =  stg.nik_dinilai
+                                    LEFT JOIN  stg_penilaian_sls as stg ON  dk.nik_dinilai =  stg.nik_dinilai
+                                    LEFT JOIN data_matrix_sls_rekan_kerja drk ON dk.kode_organisasi = drk.code_org_dinilai
                                     WHERE dk.office = '$office'
-                                    GROUP BY dk.periode_ppk, stg.nik_dinilai, dk.nama_dinilai
+                                    GROUP BY dk.periode_sls, stg.nik_dinilai, dk.nama_dinilai
                                     ORDER BY dk.nama_dinilai ASC");
 		return $data->result_array();
 	}
@@ -73,25 +74,26 @@ class M_monitoring_sls extends CI_model
 
 
 		// menggunakan query builder pada codeigniter
-		$data = $this->db->query("SELECT dk.periode_ppk, dk.nik_dinilai, dk.nama_dinilai, dk.office, dk.departemen, dk.kode_organisasi, dk.organisasi_ppk,
+		$data = $this->db->query("SELECT dk.periode_sls, dk.nik_dinilai, dk.nama_dinilai, dk.office, dk.departemen, dk.kode_organisasi, dk.organisasi_sls,
                                    (CASE WHEN dk.nik_p1 IS NOT NULL AND dk.nik_p1 != '' THEN 1 ELSE 0 END +
                                    CASE WHEN dk.nik_p2 IS NOT NULL AND dk.nik_p2 != '' THEN 1 ELSE 0 END +
-                                   CASE WHEN dk.nik_p3 IS NOT NULL AND dk.nik_p3 != '' THEN 1 ELSE 0 END
+                                   CASE WHEN drk.code_org_penilai IS NOT NULL AND drk.code_org_penilai != '' THEN 1 ELSE 0 END
                                     ) AS jumlah_penilai,
                                     COUNT(DISTINCT stg.nip_penilai) as progress_penilaian,
                                     stg.tanggal_input
                                     FROM data_matrix_sls as dk
-                                    LEFT JOIN  stg_penilaian_ppk as stg ON  dk.nik_dinilai =  stg.nik_dinilai
+                                    LEFT JOIN  stg_penilaian_sls as stg ON  dk.nik_dinilai =  stg.nik_dinilai
+                                    LEFT JOIN data_matrix_sls_rekan_kerja drk ON dk.kode_organisasi = drk.code_org_dinilai
                                     WHERE dk.office = '$office'
                                     AND dk.departemen = '$departemen'
-                                    GROUP BY dk.periode_ppk, stg.nik_dinilai, dk.nama_dinilai
+                                    GROUP BY dk.periode_sls, stg.nik_dinilai, dk.nama_dinilai
                                     ORDER BY dk.nama_dinilai ASC");
 		return $data->result_array();
 	}
 
   public function detail_penilai($nik_dinilai)
 {
-      $query_sql = "SELECT DISTINCT a.periode_ppk,
+      $query_sql = "SELECT DISTINCT a.periode_sls,
       a.nik_p1 AS nik_penilai,
       a.nama_p1 AS nama_penilai,
       'P1' AS kode_penilai,
@@ -100,7 +102,7 @@ class M_monitoring_sls extends CI_model
       ELSE 'Belum Menilai'
       END AS status
       FROM data_matrix_sls a
-      LEFT JOIN stg_penilaian_ppk b
+      LEFT JOIN stg_penilaian_sls b
       ON a.nik_dinilai = b.nik_dinilai
       AND a.nik_p1 = b.nip_penilai
       WHERE a.nik_dinilai = ?
@@ -108,7 +110,7 @@ class M_monitoring_sls extends CI_model
 
       UNION ALL
 
-      SELECT DISTINCT a.periode_ppk,
+      SELECT DISTINCT a.periode_sls,
       a.nik_p2 AS nik_penilai,
       a.nama_p2 AS nama_penilai,
       'P2' AS kode_penilai,
@@ -117,7 +119,7 @@ class M_monitoring_sls extends CI_model
       ELSE 'Belum Menilai'
       END AS status
       FROM data_matrix_sls a
-      LEFT JOIN stg_penilaian_ppk b
+      LEFT JOIN stg_penilaian_sls b
       ON a.nik_dinilai = b.nik_dinilai
       AND a.nik_p2 = b.nip_penilai
       WHERE a.nik_dinilai = ?
@@ -125,20 +127,19 @@ class M_monitoring_sls extends CI_model
 
       UNION ALL
 
-      SELECT DISTINCT a.periode_ppk,
-      a.nik_p3 AS nik_penilai,
-      a.nama_p3 AS nama_penilai,
+      SELECT DISTINCT a.periode_sls,
+      a.nik_penilai AS nik_penilai,
+      a.nama_penilai AS nama_penilai,
       'P3' AS kode_penilai,
       CASE
       WHEN b.nip_penilai IS NOT NULL THEN 'Sudah Menilai'
       ELSE 'Belum Menilai'
       END AS status
-      FROM data_matrix_sls a
-      LEFT JOIN stg_penilaian_ppk b
-      ON a.nik_dinilai = b.nik_dinilai
-      AND a.nik_p3 = b.nip_penilai
+      FROM data_matrix_sls_rekan_kerja a
+      LEFT JOIN stg_penilaian_sls b ON a.nik_dinilai = b.nik_dinilai
+      AND a.nik_penilai = b.nip_penilai
       WHERE a.nik_dinilai = ?
-      AND a.nik_p3 IS NOT NULL
+      AND a.nik_penilai IS NOT NULL
       ";
 
 

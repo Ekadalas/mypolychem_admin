@@ -65,7 +65,7 @@
               ?>
             </select>
             </div>
-            <button type="submit" class="btn btn-warning mb-2">Filter<i class="fas fa-search"></i></button>
+            <button type="submit" class="btn btn-warning mb-2">Filter TEST<i class="fas fa-search"></i></button>
             </form>
 
 <style>
@@ -85,7 +85,7 @@
           <thead class="thead-light"  style="font-size: 12px;">
           <tr>
           <th>NO</th>
-          <th>PERIODE PPK</th>
+          <th>PERIODE SLS</th>
           <th>NIK</th>
           <th>NAMA</th>
           <th>DEPARTEMEN</th>
@@ -104,7 +104,7 @@
           $no = 1;
 
           foreach ($monitor_sls as $k) {
-          $periode_ppk          = $k['periode_ppk'];
+          $periode_sls          = $k['periode_sls'];
           $nik_dinilai          = $k['nik_dinilai'];
           $nama_dinilai         = $k['nama_dinilai'];
           $departemen           = $k['departemen'];
@@ -113,7 +113,7 @@
           ?>
           <tr>
           <td><?php echo $no++  ?></td>
-          <td><?php echo $periode_ppk ?></td>
+          <td><?php echo $periode_sls ?></td>
           <td><?php echo $nik_dinilai  ?></td>
           <td><?php echo $nama_dinilai  ?></td>
           <td><?php echo $departemen  ?></td>
@@ -167,7 +167,7 @@
           <div class="modal-content">
           <div class="modal-header">
           <h5 class="modal-title" id="tabelDetailLabel">
-            PENILAI PPK
+            PENILAI SLS
           </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>

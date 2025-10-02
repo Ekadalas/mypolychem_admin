@@ -22,10 +22,46 @@ class M_matrix_sls extends CI_Model
     $office = 'KRW';
   }
 
-	$data_matrix = $this->db->query("SELECT a.id, a.periode_ppk ,a.nik_dinilai, a.nama_dinilai, b.departemen , b.unit_kerja, a.nama_p1, a.nama_p2, a.nama_p3 FROM data_matrix_sls a LEFT JOIN data_karyawan b ON a.nik_dinilai = b.nip_btn WHERE a.office = '$office' ORDER BY a.nama_dinilai ASC;");
+	// $data_matrix = $this->db->query("SELECT a.id, a.periode_sls ,a.nik_dinilai, 
+  // a.nama_dinilai, b.departemen , b.unit_kerja, 
+  // a.nama_p1, a.nama_p2, a.nama_p3,  c.nama_penilai AS code_org_rekan_kerja 
+  // FROM data_matrix_sls a 
+  // LEFT JOIN data_karyawan b ON a.nik_dinilai = b.nip_btn 
+  // LEFT JOIN data_matrix_sls_rekan_kerja c ON a.kode_organisasi = c.code_org_penilai
+  // WHERE a.office = '$office' 
+  // ORDER BY a.nama_dinilai ASC;");
 
-	return $data_matrix->result_array();
-	}
+  // QUERY  DUPLIKAT penilai
+  	// $data_matrix = $this->db->query("SELECT 
+    // a.*,
+    // b.code_org_penilai AS code_org_rekan_kerja,
+    // b.nik_penilai AS nik_rekan_kerja,
+    // b.nama_penilai AS nama_rekan_kerja
+    // FROM data_matrix_sls a
+    // LEFT JOIN data_matrix_sls_rekan_kerja b 
+    // ON a.kode_organisasi = b.code_org_dinilai
+    // WHERE a.office = '$office' ORDER BY a.nama_dinilai ASC
+    // ");
+
+    $data_matrix = $this->db->query("
+    SELECT 
+        a.*,
+        MIN(b.code_org_penilai) AS code_org_rekan_kerja,
+        MIN(b.nik_penilai) AS nik_rekan_kerja,
+        MIN(b.nama_penilai) AS nama_rekan_kerja
+    FROM data_matrix_sls a
+    LEFT JOIN data_matrix_sls_rekan_kerja b 
+        ON a.kode_organisasi = b.code_org_dinilai
+    WHERE a.office = '$office'
+    GROUP BY a.office, a.nama_dinilai
+    ORDER BY a.nama_dinilai ASC
+");
+
+
+  	return $data_matrix->result_array();
+	
+}
+
 
 
   public function data_matriks($ktr) {
@@ -44,8 +80,25 @@ class M_matrix_sls extends CI_Model
 			$nik_string = "'$nik'"; // fallback kalau bukan array
 		}
 
-		$query = $this->db->query("SELECT id, nik_dinilai, nama_dinilai, nik_p1, nama_p1, nik_p2, nama_p2, nik_p3, nama_p3 FROM data_matrix_sls WHERE id IN ($nik_string)"); 
-		return $query->result_array(); 
+		// $query = $this->db->query("SELECT id, nik_dinilai, nama_dinilai, 
+    // nik_p1, nama_p1, nik_p2, nama_p2, nik_p3, nama_p3 
+    // FROM data_matrix_sls 
+    // WHERE id IN ($nik_string)");
+
+$query = $this->db->query("
+    SELECT DISTINCT a.id, a.nik_dinilai, a.nama_dinilai, 
+           a.nik_p1, a.nama_p1, 
+           a.nik_p2, a.nama_p2, 
+           a.nik_p3, a.nama_p3, 
+           b.code_org_penilai
+    FROM data_matrix_sls a
+    JOIN data_matrix_sls_rekan_kerja b 
+        ON a.kode_organisasi = b.code_org_dinilai    
+    WHERE a.id IN ($nik_string)
+");
+
+
+    return $query->result_array(); 
 	}
 
 

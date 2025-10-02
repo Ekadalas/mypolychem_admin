@@ -100,6 +100,7 @@
                 <th>GENDER</th>
                 <th>GRADE</th>
                 <th>DEPARTEMEN</th>
+                <th>CODE ORG</th>
                 <th>UNIT KERJA</th>
 								<?php
 									$cek = $this->db->query("SELECT level FROM data_karyawan
@@ -131,6 +132,7 @@
                                   $sex        = $k['sex'];
 																	$cd_grade   = $k['cd_grade'];
 																	$departemen = $k['departemen'];
+                                  $code_org = $k['code_org'];
 																	$unit_kerja = $k['unit_kerja'];
 																	$device     = $k['device'];
 																	$status_change_password     = $k['status_change_password'];
@@ -142,6 +144,7 @@
                                 <td><?php echo $sex  ?></td>
                                 <td><?php echo $cd_grade ?></td>
                                 <td><?php echo $departemen?></td>
+                                <td><?php echo $code_org?></td>
                                 <td><?php echo $unit_kerja ?></td>
 																<?php
 																$cek = $this->db->query("SELECT level FROM data_karyawan
